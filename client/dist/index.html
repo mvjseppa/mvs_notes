@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<nav>
+    <list id="nav_links">
+        <li><a href="#" class="nav_link" id="create_user_link">Sign up</a>
+        <li><a href="#" class="nav_link" id="confirm_user_link">Confirm user</a>
+        <li><a href="#" class="nav_link" id="login_user_link">Log in</a>
+    </list>
+</nav>
+
+<div id="root">
+
+    <div id="login">
+        <h2 id="login_title"></h2>
+        <p id="login_prompt"></p>
+        <input id="email">
+        <input id="passwd" type="password">
+        <input id="verification">
+        <button type="button" id="loginBtn">Submit</button>
+    </div>
+
+
+</div>
+
+<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.266.1.min.js"></script>
+<script src="./aws-cognito-sdk.min.js"></script>
+<script src="./amazon-cognito-identity.min.js"></script>
+<script src="./createUser.js"></script>
+<script src="./confirmUser.js"></script>
+<script src="./loginUser.js"></script>
+<script src="./main.js"></script>
+
+</body>
+</html>
