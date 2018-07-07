@@ -10,6 +10,7 @@ function loginUser(email, password)
         onSuccess: function (result) {
             var authToken = result.getIdToken().getJwtToken();
             console.log(authToken);
+            getNotes(authToken);
         },
 
         onFailure: function(err) {

@@ -5,6 +5,20 @@ var poolData = {
 
 var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
+function getNotes(authToken) {
+    $.ajax({
+        method: 'GET',
+        url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
+        headers: { Authorization: authToken},
+        success: function (result) {
+            alert(JSON.stringify(result));
+        },
+        error: function (error) {
+            alert(error);
+        }
+    });
+}
+
 function createUserCallback(err, result)
 {
     if (err) {
@@ -65,7 +79,7 @@ $('#login_user_link').click( function(){
 
     $('#loginBtn').unbind('click');
     $('#loginBtn').click(function(){
-        loginUser($('#email').val(), $('#passwd').val());
+        loginUser($('#email').val(), $('#passwd').val(), getNotes);
     });
 });
 
