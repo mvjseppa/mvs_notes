@@ -1,4 +1,4 @@
-function loginUser(email, password)
+function loginUser(email, password, successCallback)
 {
     var authenticationData = {Username : email, Password : password};
     var userData = {Username : email, Pool : userPool};
@@ -7,15 +7,8 @@ function loginUser(email, password)
     var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
 
     cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: function (result) {
-            var authToken = result.getIdToken().getJwtToken();
-            console.log(authToken);
-            getNotes(authToken);
-        },
-
-        onFailure: function(err) {
-            alert(err);
-        },
+        onSuccess: successCallback,
+        onFailure: function(err) {alert(err);},
         mfaRequired: function(codeDeliveryDetails) {
             var verificationCode = prompt('Please input verification code' ,'');
             cognitoUser.sendMFACode(verificationCode, this);

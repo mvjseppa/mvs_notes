@@ -4,6 +4,19 @@ var poolData = {
 };
 
 var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+var notes = [];
+
+class Notes extends React.Component {
+    render() {
+
+        var noteList = notes.map(function(note, i){
+                //var noteJson = JSON.stringify(note);
+                return <li key={i}>{note.text}</li>;
+        })
+
+        return  <ul>{ noteList }</ul>;
+    }
+}
 
 function getNotes(authToken) {
     $.ajax({
@@ -11,12 +24,25 @@ function getNotes(authToken) {
         url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
         headers: { Authorization: authToken},
         success: function (result) {
-            alert(JSON.stringify(result));
+            //alert(JSON.stringify(result));
+            notes = result;
+
+            ReactDOM.render(
+                <Notes />,
+                document.getElementById('root')
+            );
+
         },
         error: function (error) {
             alert(error);
         }
     });
+}
+
+function loginSuccessCallback(result) {
+    var authToken = result.getIdToken().getJwtToken();
+    console.log(authToken);
+    notes = getNotes(authToken);
 }
 
 function createUserCallback(err, result)
@@ -83,4 +109,6 @@ $('#login_user_link').click( function(){
     });
 });
 
-$('#login_user_link').click();
+//$('#login_user_link').click();
+
+loginUser("mikko.v.seppala@gmail.com", "0.juuret", loginSuccessCallback);
