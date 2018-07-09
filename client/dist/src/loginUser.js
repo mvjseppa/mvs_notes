@@ -1,10 +1,13 @@
-function loginUser(email, password, successCallback)
+import {AuthenticationDetails} from 'amazon-cognito-identity-js';
+import {CognitoUser} from 'amazon-cognito-identity-js';
+
+function loginUser(email, password, userPool, successCallback)
 {
     var authenticationData = {Username : email, Password : password};
     var userData = {Username : email, Pool : userPool};
 
-    var authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
-    var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+    var authenticationDetails = new AuthenticationDetails(authenticationData);
+    var cognitoUser = new CognitoUser(userData);
 
     cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess: successCallback,
@@ -15,3 +18,6 @@ function loginUser(email, password, successCallback)
         }
     });
 }
+
+export default loginUser;
+export{loginUser};
