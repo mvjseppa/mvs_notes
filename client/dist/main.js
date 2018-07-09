@@ -10,11 +10,16 @@ class Notes extends React.Component {
     render() {
 
         var noteList = notes.map(function(note, i){
-                //var noteJson = JSON.stringify(note);
-                return <li key={i}>{note.text}</li>;
+            return (
+                <div className="note" key={i}>
+                    <div className="note_controls"></div>
+                    <div className="note_contents">{note.text}</div>
+                    <div className="note_id">{note.id}</div>
+                </div>
+            );
         })
 
-        return  <ul>{ noteList }</ul>;
+        return <div>{ noteList }</div>;
     }
 }
 
@@ -64,6 +69,7 @@ function createUserCallback(err, result)
     $('#passwd').val("");
 }
 
+/*
 $('#create_user_link').click(function(){
 
     $('#login_title').text("Create user");
@@ -108,7 +114,7 @@ $('#login_user_link').click( function(){
         loginUser($('#email').val(), $('#passwd').val(), getNotes);
     });
 });
-
+*/
 //$('#login_user_link').click();
 
 loginUser("mikko.v.seppala@gmail.com", "0.juuret", loginSuccessCallback);
