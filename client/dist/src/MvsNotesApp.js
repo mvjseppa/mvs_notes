@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import {CognitoUserPool} from 'amazon-cognito-identity-js';
 import loginUser from './loginUser';

@@ -12,8 +12,6 @@ export default function loginUser(email, password, userPool, successCallback)
     var authenticationDetails = new AuthenticationDetails(authenticationData);
     var cognitoUser = new CognitoUser(userData);
 
-    var authToken = "";
-
     cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess: function(result) {successCallback(result)},
         onFailure: function(err) {console.log("error!!"); alert(JSON.stringify(err));},
