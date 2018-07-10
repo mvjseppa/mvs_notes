@@ -112,12 +112,6 @@ class Notes extends React.Component {
 
 
 /*
-function loginSuccessCallback(result) {
-    var authToken = result.getIdToken().getJwtToken();
-    console.log(authToken);
-    notes = getNotes(authToken);
-}
-
 function createUserCallback(err, result)
 {
     if (err) {
