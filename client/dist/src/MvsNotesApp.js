@@ -40,13 +40,15 @@ export default class MvsNotesApp extends React.Component
 
     loginUser()
     {
-        var authenticationData = {Username : this.state.email, Password : this.state.passwd};
-        var userData = {Username : this.state.email, Pool : this.state.userPool};
+        var cognitoUser = new CognitoUser(
+            {Username : this.state.email, Pool : this.state.userPool}
+        );
 
-        var authenticationDetails = new AuthenticationDetails(authenticationData);
-        var cognitoUser = new CognitoUser(userData);
+        var authDetails = new AuthenticationDetails(
+            {Username : this.state.email, Password : this.state.passwd}
+        );
 
-        cognitoUser.authenticateUser(authenticationDetails, {
+        var callbacks = {
             onSuccess: function(result){
                 var token = result.getIdToken().getJwtToken();
                 this.setState({
@@ -54,12 +56,16 @@ export default class MvsNotesApp extends React.Component
                     appState: AppStates.NOTES
                 });
             }.bind(this),
-            onFailure: function(err) {console.log("error!!"); alert(JSON.stringify(err));},
+
+            onFailure: function(err) { alert(JSON.stringify(err)); },
+
             mfaRequired: function(codeDeliveryDetails) {
                 var verificationCode = prompt('Please input verification code' ,'');
                 cognitoUser.sendMFACode(verificationCode, this);
             }
-        });
+        }
+
+        cognitoUser.authenticateUser(authDetails, callbacks);
     }
 
     render() {
