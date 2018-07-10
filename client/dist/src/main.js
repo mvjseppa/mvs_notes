@@ -1,13 +1,100 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import {CognitoUserPool} from 'amazon-cognito-identity-js';
+import loginUser from './loginUser';
 
-var notes = [];
+export default class MvsNotesApp extends React.Component
+{
+    constructor(props) {
+        super(props);
+
+        var poolData = {
+            UserPoolId : 'eu-central-1_op50LtdMn',
+            ClientId : '2hvp9c2sls7f0fq10p8u3t5bt2'
+        };
+
+        this.state = {
+            currentPage: "login",
+            email: "",
+            passwd: "",
+            userPool: new CognitoUserPool(poolData),
+            authToken: "",
+        };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(event) {
+        console.log(event.target.name);
+        console.log(event.target.value);
+        this.setState({ [event.target.name]: event.target.value });
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+        console.log(event);
+        var token = "";
+
+        loginUser(this.state.email, this.state.passwd, this.state.userPool, function(result){
+            token = result.getIdToken().getJwtToken();
+            console.log("token: " + token);
+            this.setState({
+                authToken: token,
+                currentPage: "notes"
+            });
+            console.log("state token: " + this.state.authToken);
+        }.bind(this));
+    }
+
+    render() {
+        if(this.state.currentPage === "login"){
+            return(
+                <div id="login">
+                    <form onSubmit={this.handleSubmit}>
+                        <input type="text" name="email" onChange={this.handleChange}/>
+                        <input type="password" name="passwd" onChange={this.handleChange}/>
+                        <input type="submit" value="Login"/>
+                    </form>
+                </div>
+            );
+        }
+        else if(this.state.currentPage === "notes")
+        {
+            return <Notes authToken={this.state.authToken}/>
+        }
+    }
+}
 
 class Notes extends React.Component {
-    render() {
+    constructor(props) {
+        super(props);
+        this.authToken = props.authToken;
+        this.state = { notes: [] };
+    }
 
-        var noteList = notes.map(function(note, i){
+    componentDidMount() {
+        this.getNotes();
+    }
+
+    getNotes() {
+        var self = this;
+        $.ajax({
+            method: 'GET',
+            url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
+            headers: { Authorization: self.authToken},
+            success: function (result) {
+                self.setState({notes: result});
+            },
+            error: function (error) {
+                alert(error);
+            }
+        });
+    }
+
+    render() {
+        var noteElements = this.state.notes.map(function(note, i){
             return (
                 <div className="note" key={i}>
                     <div className="note_controls"></div>
@@ -17,31 +104,13 @@ class Notes extends React.Component {
             );
         })
 
-        return <div>{ noteList }</div>;
+        return <div>{ noteElements }</div>;
     }
 }
 
-function getNotes(authToken) {
-    $.ajax({
-        method: 'GET',
-        url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
-        headers: { Authorization: authToken},
-        success: function (result) {
-            //alert(JSON.stringify(result));
-            notes = result;
 
-            ReactDOM.render(
-                <Notes />,
-                document.getElementById('main')
-            );
 
-        },
-        error: function (error) {
-            alert(error);
-        }
-    });
-}
-
+/*
 function loginSuccessCallback(result) {
     var authToken = result.getIdToken().getJwtToken();
     console.log(authToken);
@@ -66,5 +135,4 @@ function createUserCallback(err, result)
     }
     $('#passwd').val("");
 }
-
-export default loginSuccessCallback;
+*/
