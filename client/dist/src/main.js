@@ -4,6 +4,12 @@ import $ from 'jquery';
 import {CognitoUserPool} from 'amazon-cognito-identity-js';
 import loginUser from './loginUser';
 
+const AppStates = {
+    LOGIN: "login",
+    SIGNUP: "signup",
+    NOTES: "notes",
+}
+
 export default class MvsNotesApp extends React.Component
 {
     constructor(props) {
@@ -15,7 +21,7 @@ export default class MvsNotesApp extends React.Component
         };
 
         this.state = {
-            currentPage: "login",
+            appState: AppStates.LOGIN,
             email: "",
             passwd: "",
             userPool: new CognitoUserPool(poolData),
@@ -27,29 +33,24 @@ export default class MvsNotesApp extends React.Component
     }
 
     handleChange(event) {
-        console.log(event.target.name);
-        console.log(event.target.value);
         this.setState({ [event.target.name]: event.target.value });
     }
 
     handleSubmit = event => {
         event.preventDefault();
-        console.log(event);
         var token = "";
 
         loginUser(this.state.email, this.state.passwd, this.state.userPool, function(result){
             token = result.getIdToken().getJwtToken();
-            console.log("token: " + token);
             this.setState({
                 authToken: token,
-                currentPage: "notes"
+                appState: AppStates.NOTES
             });
-            console.log("state token: " + this.state.authToken);
         }.bind(this));
     }
 
     render() {
-        if(this.state.currentPage === "login"){
+        if(this.state.appState === AppStates.LOGIN){
             return(
                 <div id="login">
                     <form onSubmit={this.handleSubmit}>
@@ -60,7 +61,7 @@ export default class MvsNotesApp extends React.Component
                 </div>
             );
         }
-        else if(this.state.currentPage === "notes")
+        else if(this.state.appState === AppStates.NOTES)
         {
             return <Notes authToken={this.state.authToken}/>
         }
