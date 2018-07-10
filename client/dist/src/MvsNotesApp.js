@@ -27,12 +27,9 @@ export default class MvsNotesApp extends React.Component
             userPool: new CognitoUserPool(poolData),
             authToken: "",
         };
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChange(event) {
+    handleChange = event => {
         this.setState({ [event.target.name]: event.target.value });
     }
 
