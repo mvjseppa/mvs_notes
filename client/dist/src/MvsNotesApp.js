@@ -1,7 +1,5 @@
 import React from 'react';
-import {CognitoUserPool} from 'amazon-cognito-identity-js';
-import {AuthenticationDetails} from 'amazon-cognito-identity-js';
-import {CognitoUser} from 'amazon-cognito-identity-js';
+import {CognitoUserPool, AuthenticationDetails, CognitoUser} from 'amazon-cognito-identity-js';
 import Notes from './Notes';
 
 const AppStates = {
