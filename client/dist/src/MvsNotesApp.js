@@ -77,14 +77,13 @@ class Notes extends React.Component {
     }
 
     getNotes() {
-        var self = this;
         $.ajax({
             method: 'GET',
             url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
-            headers: { Authorization: self.authToken},
+            headers: { Authorization: this.authToken},
             success: function (result) {
-                self.setState({notes: result});
-            },
+                this.setState({notes: result});
+            }.bind(this),
             error: function (error) {
                 alert(error);
             }
