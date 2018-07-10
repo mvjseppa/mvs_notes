@@ -1,7 +1,8 @@
 import React from 'react';
 import {CognitoUserPool} from 'amazon-cognito-identity-js';
+import {AuthenticationDetails} from 'amazon-cognito-identity-js';
+import {CognitoUser} from 'amazon-cognito-identity-js';
 import Notes from './Notes';
-import loginUser from './loginUser';
 
 const AppStates = {
     LOGIN: "login",
@@ -34,15 +35,31 @@ export default class MvsNotesApp extends React.Component
 
     handleSubmit = event => {
         event.preventDefault();
-        var token = "";
+        this.loginUser();
+    }
 
-        loginUser(this.state.email, this.state.passwd, this.state.userPool, function(result){
-            token = result.getIdToken().getJwtToken();
-            this.setState({
-                authToken: token,
-                appState: AppStates.NOTES
-            });
-        }.bind(this));
+    loginUser()
+    {
+        var authenticationData = {Username : this.state.email, Password : this.state.passwd};
+        var userData = {Username : this.state.email, Pool : this.state.userPool};
+
+        var authenticationDetails = new AuthenticationDetails(authenticationData);
+        var cognitoUser = new CognitoUser(userData);
+
+        cognitoUser.authenticateUser(authenticationDetails, {
+            onSuccess: function(result){
+                var token = result.getIdToken().getJwtToken();
+                this.setState({
+                    authToken: token,
+                    appState: AppStates.NOTES
+                });
+            }.bind(this),
+            onFailure: function(err) {console.log("error!!"); alert(JSON.stringify(err));},
+            mfaRequired: function(codeDeliveryDetails) {
+                var verificationCode = prompt('Please input verification code' ,'');
+                cognitoUser.sendMFACode(verificationCode, this);
+            }
+        });
     }
 
     render() {
