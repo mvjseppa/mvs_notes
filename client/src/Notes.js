@@ -82,17 +82,14 @@ class NoteCreator extends React.Component{
     render() {
         return(
             <div className="note">
-            <form onSubmit={this.handleSubmit}>
-                <ul className="no_bullet">
-                    <li>
-                        <textarea id="new_note"
-                            className="text"
-                            cols="40" rows ="8"
-                            name="newNote"
-                            onChange={this.handleChange}
-                            value={this.state.newNote}></textarea></li>
-                    <li><input type="submit" value="Save note" /></li>
-                </ul>
+            <form onSubmit={this.handleSubmit} className="stacked_form">
+                <textarea id="new_note"
+                    className="text"
+                    cols="40" rows ="8"
+                    name="newNote"
+                    onChange={this.handleChange}
+                    value={this.state.newNote}></textarea>
+                <input type="submit" value="Save note" />
             </form>
             </div>
         );

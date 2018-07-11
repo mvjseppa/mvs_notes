@@ -70,7 +70,7 @@ export default class MvsNotesApp extends React.Component
         if(this.state.appState === AppStates.LOGIN){
             return(
                 <div id="login">
-                    <form onSubmit={this.handleSubmit}>
+                    <form onSubmit={this.handleSubmit} className="stacked_form">
                         <input type="text" name="email" onChange={this.handleChange}/>
                         <input type="password" name="passwd" onChange={this.handleChange}/>
                         <input type="submit" value="Login"/>

@@ -126,9 +126,11 @@ input:-webkit-autofill {
 input[type=text], input[type=password] {
     padding-left: 5px;
     padding-right: 5px;
+    margin-bottom: 2px;
     background-color: #FFFFFF;
     border-radius: 5px;
     border: 1px solid #101010;
+    min-width: 200px;
 }
 
 input[type=submit] {
@@ -152,6 +154,12 @@ input[type=submit].note_delete {
     background-color: transparent;
     border: 0 none;
     font-size: 120%;
+}
+
+.stacked_form{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .note{
