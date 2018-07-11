@@ -109,4 +109,5 @@ custom:
     auth: "arn:aws:cognito-idp:eu-central-1:412384590453:userpool/eu-central-1_op50LtdMn"
     client:
         bucketName: ${self:provider.environment.FINCH_BUCKET} # (see Configuration Parameters below)
+        distributionFolder: "client/build"
         # [other configuration parameters] (see Configuration Parameters below)
