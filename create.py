@@ -2,6 +2,7 @@ import boto3
 import json
 import os
 import uuid
+from get import build_response
 
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
@@ -22,16 +23,4 @@ def create(event, context):
     }
 
     table.put_item(Item=item)
-
-    response = {
-        "statusCode": 200,
-
-        "headers": {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': True,
-        },
-
-        "body": json.dumps(item)
-    }
-
-    return response
+    return build_response(200, json.dumps(item))

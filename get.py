@@ -7,6 +7,18 @@ dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
 
 
+def build_response(status_code, body_str):
+    return {
+        "statusCode": status_code,
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": True,
+            "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT"
+        },
+        "body": body_str
+    }
+
+
 def get_from_dynamodb(id, username):
     response = table.get_item(Key={"id": id})
     try:
@@ -31,15 +43,9 @@ def get(event, context):
     item = get_from_dynamodb(id, username)
 
     if item is None:
-        return {
-            "statusCode": 404,
-            "body": '{"message": "Not found"}'
-        }
+        return build_response(404, '{"message": "Not found"}')
 
-    return {
-        "statusCode": 200,
-        "body": json.dumps(item)
-    }
+    return build_response(200, json.dumps(item))
 
 
 def list(event, context):
@@ -48,13 +54,4 @@ def list(event, context):
 
     print(response)
 
-    return {
-        "statusCode": 200,
-
-        "headers": {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': True,
-        },
-
-        "body": json.dumps(response['Items'])
-    }
+    return build_response(200, json.dumps(response['Items']))

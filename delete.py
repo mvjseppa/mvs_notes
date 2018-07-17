@@ -1,6 +1,6 @@
 import boto3
 import os
-from get import get_from_dynamodb
+from get import get_from_dynamodb, build_response
 
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
@@ -14,24 +14,9 @@ def delete(event, context):
     item = get_from_dynamodb(id, user)
 
     if(item is None):
-        return {
-            "statusCode": 404,
-            "body": '{"message": "Not found"}',
-            "headers": {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Credentials': True,
-            }
-        }
+        return build_response(404, '{"message": "Not found"}')
 
     response = table.delete_item(Key={"id": id})
-
     print(response)
 
-    return {
-        "statusCode": 200,
-        "body": '{"message": "Deleted."}',
-        "headers": {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': True,
-        }
-    }
+    return build_response(200, '{"message": "Deleted."}')
