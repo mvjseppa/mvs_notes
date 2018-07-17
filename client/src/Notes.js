@@ -1,7 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
 
-export default class Notes extends React.Component {
+export default class NoteContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = { notes: [] };
@@ -28,18 +28,63 @@ export default class Notes extends React.Component {
     render() {
         var noteElements = this.state.notes.map(function(note, i){
             return (
-                <div className="note" key={i}>
-                    <div className="note_controls"></div>
-                    <div className="note_contents">{note.text}</div>
-                    <div className="note_id">{note.id}</div>
-                </div>
+                <Note
+                    key={i}
+                    authToken={this.props.authToken}
+                    note_text={note.text}
+                    note_id={note.id}
+                    updateRequest={this.getNotes.bind(this)} />
             );
-        })
+        }.bind(this))
 
         return (
             <div id="user_data">
-            <NoteCreator authToken={this.props.authToken} createCallback={this.getNotes.bind(this)} />
+            <NoteCreator
+                authToken={this.props.authToken}
+                updateRequest={this.getNotes.bind(this)}
+            />
             { noteElements }
+            </div>
+        );
+    }
+}
+
+class Note extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
+    handleClick() {
+        this.deleteNote(this.props.note_id);
+    }
+
+    deleteNote(id) {
+        console.log("deleting: " + id);
+
+        $.ajax({
+            method: 'DELETE',
+            url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes/'+id,
+            headers: { Authorization: this.props.authToken},
+            data: '{blah: "blah"}',
+            success: function (result) {
+                console.log("here!");
+                this.props.updateRequest();
+            }.bind(this),
+            error: function (error) {
+                alert(JSON.stringify(error));
+            }
+        });
+    }
+
+    render() {
+        return(
+            <div className="note">
+                <div className="note_controls">
+                    <button className="note_delete" onClick={this.handleClick.bind(this)}>x</button>
+                </div>
+                <div className="note_contents">{this.props.note_text}</div>
+                <div className="note_id">{this.props.note_id}</div>
             </div>
         );
     }
@@ -58,6 +103,10 @@ class NoteCreator extends React.Component{
     handleSubmit = event => {
         event.preventDefault();
 
+        if(this.state.newNote.length === 0){
+            return;
+        }
+
         var noteData={
             text: this.state.newNote,
             color: "0xABCDEF"
@@ -70,7 +119,7 @@ class NoteCreator extends React.Component{
             data: JSON.stringify(noteData),
             success: function (result) {
                 this.setState({newNote: ""});
-                this.props.createCallback();
+                this.props.updateRequest();
             }.bind(this),
             error: function (error) {
                 console.log("post error" + this.props.authToken);

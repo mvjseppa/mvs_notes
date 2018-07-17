@@ -1,6 +1,6 @@
 import React from 'react';
 import {CognitoUserPool, AuthenticationDetails, CognitoUser} from 'amazon-cognito-identity-js';
-import Notes from './Notes';
+import NoteContainer from './Notes';
 
 const AppStates = {
     LOGIN: "login",
@@ -80,7 +80,7 @@ export default class MvsNotesApp extends React.Component
         }
         else if(this.state.appState === AppStates.NOTES)
         {
-            return <Notes authToken={this.state.authToken}/>
+            return <NoteContainer authToken={this.state.authToken}/>
         }
     }
 }

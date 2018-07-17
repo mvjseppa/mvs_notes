@@ -133,7 +133,7 @@ input[type=text], input[type=password] {
     min-width: 200px;
 }
 
-input[type=submit] {
+button, input[type=submit] {
     padding-left: 5px;
     padding-right: 5px;
     background-color: #EEEEEE;
@@ -144,13 +144,13 @@ input[type=submit] {
     color: #000030;
 }
 
-input[type=submit]:hover {
+button:hover, input[type=submit]:hover {
     color: #EEEEEE;
     background-color: #000030;
     border: 1px solid #EEEEEE;
 }
 
-input[type=submit].note_delete {
+button.note_delete {
     background-color: transparent;
     border: 0 none;
     font-size: 120%;
@@ -205,5 +205,3 @@ input[type=submit].note_delete {
     font-size: 70%;
     color: 999999;
 }
-
-
