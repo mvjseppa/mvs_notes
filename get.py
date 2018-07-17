@@ -7,21 +7,33 @@ dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
 
 
+def get_from_dynamodb(id, username):
+    response = table.get_item(Key={"id": id})
+    try:
+        item = response['Item']
+        print(response)
+    except KeyError:
+        return None
+
+    if item['user'] != username:
+        return None
+
+    return item
+
+
 def get(event, context):
 
     print(event)
 
+    id = event['pathParameters']['id']
     username = event['requestContext']['authorizer']['claims']['email']
 
-    key = {"id": event['pathParameters']['id']}
-    response = table.get_item(Key=key)
-    item = response['Item']
-    print(response)
+    item = get_from_dynamodb(id, username)
 
-    if item['user'] != username:
+    if item is None:
         return {
-            "statusCode": 401,
-            "body": '{"message": "Unauthorized"}'
+            "statusCode": 404,
+            "body": '{"message": "Not found"}'
         }
 
     return {

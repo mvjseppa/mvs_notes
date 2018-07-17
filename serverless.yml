@@ -74,6 +74,16 @@ functions:
                     authorizer:
                         arn: "${self:custom.auth}"
 
+    delete:
+        handler: delete.delete
+        events:
+            -   http:
+                    path: mvs-notes/{id}
+                    method: delete
+                    cors: true
+                    authorizer:
+                        arn: "${self:custom.auth}"
+
 
 #    customMessage:
 #        handler: customMessage.handler
