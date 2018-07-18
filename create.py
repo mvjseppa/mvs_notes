@@ -2,6 +2,7 @@ import boto3
 import json
 import os
 import uuid
+from datetime import datetime
 from get import build_response
 
 dynamodb = boto3.resource('dynamodb')
@@ -19,7 +20,8 @@ def create(event, context):
         'id': str(uuid.uuid1()),
         'text': data['text'],
         'color': data['color'],
-        'user': username
+        'user': username,
+        'timestamp': datetime.utcnow().isoformat(' ')
     }
 
     table.put_item(Item=item)

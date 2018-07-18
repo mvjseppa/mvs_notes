@@ -17,6 +17,7 @@ export default class NoteContainer extends React.Component {
             url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
             headers: { Authorization: this.props.authToken},
             success: function (result) {
+                result.sort(function(a, b){return a.timestamp < b.timestamp});
                 this.setState({notes: result});
             }.bind(this),
             error: function (error) {
@@ -33,6 +34,7 @@ export default class NoteContainer extends React.Component {
                     authToken={this.props.authToken}
                     note_text={note.text}
                     note_id={note.id}
+                    note_time={note.timestamp}
                     updateRequest={this.getNotes.bind(this)} />
             );
         }.bind(this))
@@ -86,7 +88,7 @@ class Note extends React.Component{
                 <div className="note_contents">{this.props.note_text}</div>
 
                 <div className="tooltip">
-                    <span className="tooltiptext">{this.props.note_id}</span>
+                    <span className="tooltiptext">{this.props.note_id}, {this.props.note_time}</span>
                 </div>
             </div>
         );
