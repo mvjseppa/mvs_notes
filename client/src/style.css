@@ -200,12 +200,6 @@ button.note_delete {
     align-items: center; /* align vertical */
 }
 
-.note_id
-{
-    font-size: 70%;
-    color: 999999;
-}
-
 .tooltip {
     position: relative;
     display: inline-block;
@@ -215,13 +209,12 @@ button.note_delete {
     visibility: hidden;
     max-width: 200px;
     min-width: 100px;
-    background-color: black;
-    color: #fff;
+    color: #EEEEEE;
+    background-color: #000030;
+    font-size: 80%;
     text-align: center;
-    padding: 5px ;
+    padding: 5px;
     border-radius: 6px;
-
-    /* Position the tooltip text - see examples below! */
     position: absolute;
     z-index: 1;
 }
