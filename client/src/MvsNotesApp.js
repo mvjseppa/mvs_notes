@@ -23,8 +23,16 @@ export default class MvsNotesApp extends React.Component
             email: "",
             passwd: "",
             userPool: new CognitoUserPool(poolData),
-            authToken: "",
+            authToken: ""
         };
+
+        var authToken = localStorage.getItem('authToken');
+        if(authToken !== null){
+            this.state.authToken = authToken;
+            this.state.appState = AppStates.NOTES;
+        }
+
+
     }
 
     handleChange = event => {
@@ -53,9 +61,14 @@ export default class MvsNotesApp extends React.Component
                     authToken: token,
                     appState: AppStates.NOTES
                 });
+
+                localStorage.setItem('authToken', token);
             }.bind(this),
 
-            onFailure: function(err) { alert(JSON.stringify(err)); },
+            onFailure: function(err) {
+                alert(JSON.stringify(err));
+                localStorage.setItem('authToken', "");
+            },
 
             mfaRequired: function(codeDeliveryDetails) {
                 var verificationCode = prompt('Please input verification code' ,'');
