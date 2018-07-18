@@ -205,3 +205,27 @@ button.note_delete {
     font-size: 70%;
     color: 999999;
 }
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    max-width: 200px;
+    min-width: 100px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px ;
+    border-radius: 6px;
+
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+}
+
+.note:hover .tooltiptext {
+    visibility: visible;
+}

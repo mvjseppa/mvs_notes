@@ -84,7 +84,10 @@ class Note extends React.Component{
                     <button className="note_delete" onClick={this.handleClick.bind(this)}>x</button>
                 </div>
                 <div className="note_contents">{this.props.note_text}</div>
-                <div className="note_id">{this.props.note_id}</div>
+
+                <div className="tooltip">
+                    <span className="tooltiptext">{this.props.note_id}</span>
+                </div>
             </div>
         );
     }
