@@ -23,16 +23,37 @@ export default class MvsNotesApp extends React.Component
             email: "",
             passwd: "",
             userPool: new CognitoUserPool(poolData),
-            authToken: ""
         };
 
-        var authToken = localStorage.getItem('authToken');
-        if(authToken !== null){
-            this.state.authToken = authToken;
+        if(this.getToken() !== "") {
             this.state.appState = AppStates.NOTES;
         }
+    }
 
+    getToken() {
+        const cognitoUser = this.state.userPool.getCurrentUser();
+        var token = "";
 
+        if (cognitoUser != null) {
+            cognitoUser.getSession((err, session) => {
+                if (err || !session.isValid()) {
+                    console.log("session not valid");
+                }
+                else {
+                    token = session.getIdToken().getJwtToken()
+                    console.log(token);
+                }
+            });
+        }
+        else {
+            console.log("User not found.");
+        }
+
+        return token;
+    }
+
+    requestLoginPage(){
+        this.setState({ appState: AppStates.LOGIN });
     }
 
     handleChange = event => {
@@ -55,22 +76,15 @@ export default class MvsNotesApp extends React.Component
         );
 
         var callbacks = {
-            onSuccess: function(result){
-                var token = result.getIdToken().getJwtToken();
-                this.setState({
-                    authToken: token,
-                    appState: AppStates.NOTES
-                });
-
-                localStorage.setItem('authToken', token);
-            }.bind(this),
-
-            onFailure: function(err) {
-                alert(JSON.stringify(err));
-                localStorage.setItem('authToken', "");
+            onSuccess: (result) => {
+                this.setState({ appState: AppStates.NOTES });
             },
 
-            mfaRequired: function(codeDeliveryDetails) {
+            onFailure: (err) => {
+                alert(JSON.stringify(err));
+            },
+
+            mfaRequired: (codeDeliveryDetails) => {
                 var verificationCode = prompt('Please input verification code' ,'');
                 cognitoUser.sendMFACode(verificationCode, this);
             }
@@ -93,7 +107,10 @@ export default class MvsNotesApp extends React.Component
         }
         else if(this.state.appState === AppStates.NOTES)
         {
-            return <NoteContainer authToken={this.state.authToken}/>
+            return  <NoteContainer
+                        getToken={this.getToken.bind(this)}
+                        requestLoginPage={this.requestLoginPage.bind(this)}
+                    />
         }
     }
 }

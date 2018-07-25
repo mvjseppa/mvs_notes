@@ -15,34 +15,37 @@ export default class NoteContainer extends React.Component {
         $.ajax({
             method: 'GET',
             url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
-            headers: { Authorization: this.props.authToken},
-            success: function (result) {
+            headers: { Authorization: this.props.getToken()},
+            success: (result) => {
                 result.sort(function(a, b){return a.timestamp < b.timestamp});
                 this.setState({notes: result});
-            }.bind(this),
-            error: function (error) {
-                alert(error);
+            },
+            error: (error) => {
+                console.log(JSON.stringify(error));
+                this.props.requestLoginPage();
             }
         });
     }
 
     render() {
-        var noteElements = this.state.notes.map(function(note, i){
+        var noteElements = this.state.notes.map( (note, i) => {
             return (
                 <Note
                     key={i}
-                    authToken={this.props.authToken}
+                    getToken={this.props.getToken}
                     note_text={note.text}
                     note_id={note.id}
                     note_time={note.timestamp}
+                    requestLoginPage={this.props.requestLoginPage}
                     updateRequest={this.getNotes.bind(this)} />
             );
-        }.bind(this))
+        } );
 
         return (
             <div id="user_data">
             <NoteCreator
-                authToken={this.props.authToken}
+                getToken={this.props.getToken}
+                requestLoginPage={this.props.requestLoginPage}
                 updateRequest={this.getNotes.bind(this)}
             />
             { noteElements }
@@ -67,14 +70,11 @@ class Note extends React.Component{
         $.ajax({
             method: 'DELETE',
             url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes/'+id,
-            headers: { Authorization: this.props.authToken},
-            data: '{blah: "blah"}',
-            success: function (result) {
-                console.log("here!");
-                this.props.updateRequest();
-            }.bind(this),
-            error: function (error) {
-                alert(JSON.stringify(error));
+            headers: { Authorization: this.props.getToken()},
+            success: (result) => { this.props.updateRequest(); },
+            error: (error) => {
+                console.log(JSON.stringify(error));
+                this.props.requestLoginPage();
             }
         });
     }
@@ -120,16 +120,16 @@ class NoteCreator extends React.Component{
         $.ajax({
             method: 'POST',
             url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
-            headers: { Authorization: this.props.authToken},
+            headers: { Authorization: this.props.getToken()},
             data: JSON.stringify(noteData),
-            success: function (result) {
+            success: (result) => {
                 this.setState({newNote: ""});
                 this.props.updateRequest();
-            }.bind(this),
-            error: function (error) {
-                console.log("post error" + this.props.authToken);
-                alert(error);
-            }.bind(this),
+            },
+            error: (error) => {
+                console.log(JSON.stringify(error));
+                this.props.requestLoginPage();
+            }
         });
     }
 
