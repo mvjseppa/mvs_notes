@@ -20,8 +20,6 @@ export default class MvsNotesApp extends React.Component
 
         this.state = {
             appState: AppStates.LOGIN,
-            email: "",
-            passwd: "",
             userPool: new CognitoUserPool(poolData),
         };
 
@@ -56,6 +54,40 @@ export default class MvsNotesApp extends React.Component
         this.setState({ appState: AppStates.LOGIN });
     }
 
+    requestNotesPage(){
+        this.setState({ appState: AppStates.NOTES });
+    }
+
+    render() {
+        if(this.state.appState === AppStates.LOGIN){
+            return(
+                <LoginForm
+                    userPool={this.state.userPool}
+                    requestNotesPage={this.requestNotesPage.bind(this)}
+                />
+            );
+        }
+        else if(this.state.appState === AppStates.NOTES)
+        {
+            return  <NoteContainer
+                        getToken={this.getToken.bind(this)}
+                        requestLoginPage={this.requestLoginPage.bind(this)}
+                    />
+        }
+    }
+}
+
+class LoginForm extends React.Component
+{
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            email: "",
+            passwd: ""
+        }
+    }
+
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value });
     }
@@ -68,7 +100,7 @@ export default class MvsNotesApp extends React.Component
     loginUser()
     {
         var cognitoUser = new CognitoUser(
-            {Username : this.state.email, Pool : this.state.userPool}
+            {Username : this.state.email, Pool : this.props.userPool}
         );
 
         var authDetails = new AuthenticationDetails(
@@ -77,7 +109,7 @@ export default class MvsNotesApp extends React.Component
 
         var callbacks = {
             onSuccess: (result) => {
-                this.setState({ appState: AppStates.NOTES });
+                this.props.requestNotesPage();
             },
 
             onFailure: (err) => {
@@ -94,24 +126,15 @@ export default class MvsNotesApp extends React.Component
     }
 
     render() {
-        if(this.state.appState === AppStates.LOGIN){
-            return(
-                <div id="login">
-                    <form onSubmit={this.handleSubmit} className="stacked_form">
-                        <input type="text" name="email" onChange={this.handleChange}/>
-                        <input type="password" name="passwd" onChange={this.handleChange}/>
-                        <input type="submit" value="Login"/>
-                    </form>
-                </div>
-            );
-        }
-        else if(this.state.appState === AppStates.NOTES)
-        {
-            return  <NoteContainer
-                        getToken={this.getToken.bind(this)}
-                        requestLoginPage={this.requestLoginPage.bind(this)}
-                    />
-        }
+        return(
+            <div id="login">
+                <form onSubmit={this.handleSubmit} className="stacked_form">
+                    <input type="text" name="email" onChange={this.handleChange}/>
+                    <input type="password" name="passwd" onChange={this.handleChange}/>
+                    <input type="submit" value="Login"/>
+                </form>
+            </div>
+        );
     }
 }
 
