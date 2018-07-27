@@ -71,24 +71,31 @@ export default class MvsNotesApp extends React.Component
         this.requestLoginPage();
     }
 
-    componentDidUpdate()
+    updateNav()
     {
         if(this.state.appState === AppStates.NOTES){
             ReactDOM.render(<a href="" onClick={this.logOutUser.bind(this)}>Log out</a>, document.getElementById('nav'));
         }
     }
 
+    componentDidUpdate()
+    {
+        this.updateNav();
+    }
+
+    componentDidMount()
+    {
+        this.updateNav();
+    }
+
     render() {
         if(this.state.appState === AppStates.LOGIN){
-            return(
-                <LoginForm
-                    userPool={this.state.userPool}
-                    requestNotesPage={this.requestNotesPage.bind(this)}
-                />
-            );
+            return  <LoginForm
+                        userPool={this.state.userPool}
+                        requestNotesPage={this.requestNotesPage.bind(this)}
+                    />
         }
-        else if(this.state.appState === AppStates.NOTES)
-        {
+        else if(this.state.appState === AppStates.NOTES){
             return  <NoteContainer
                         getToken={this.getToken.bind(this)}
                         requestLoginPage={this.requestLoginPage.bind(this)}
