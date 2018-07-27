@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {CognitoUserPool, AuthenticationDetails, CognitoUser} from 'amazon-cognito-identity-js';
 import NoteContainer from './Notes';
 
@@ -71,36 +70,48 @@ export default class MvsNotesApp extends React.Component
         this.requestLoginPage();
     }
 
-    updateNav()
-    {
-        if(this.state.appState === AppStates.NOTES){
-            ReactDOM.render(<a href="" onClick={this.logOutUser.bind(this)}>Log out</a>, document.getElementById('nav'));
-        }
-    }
-
-    componentDidUpdate()
-    {
-        this.updateNav();
-    }
-
-    componentDidMount()
-    {
-        this.updateNav();
-    }
-
     render() {
-        if(this.state.appState === AppStates.LOGIN){
-            return  <LoginForm
-                        userPool={this.state.userPool}
-                        requestNotesPage={this.requestNotesPage.bind(this)}
-                    />
+
+        var appMain = null;
+
+        if(this.state.appState === AppStates.LOGIN) {
+            appMain = (
+                <LoginForm
+                    userPool={this.state.userPool}
+                    requestNotesPage={this.requestNotesPage.bind(this)} />
+            );
         }
-        else if(this.state.appState === AppStates.NOTES){
-            return  <NoteContainer
+        else if(this.state.appState === AppStates.NOTES) {
+            appMain = (
+                <NoteContainer
                         getToken={this.getToken.bind(this)}
-                        requestLoginPage={this.requestLoginPage.bind(this)}
-                    />
+                        requestLoginPage={this.requestLoginPage.bind(this)}/>
+            );
         }
+
+        return(
+            <div id="app">
+                <header><h1>Mvs Notes</h1></header>
+                <Navigation
+                    appState={this.state.appState}
+                    logOutUser={this.logOutUser.bind(this)} />
+                <main id="main">{appMain}</main>
+                <footer></footer>
+            </div>
+        );
+    }
+}
+
+class Navigation extends React.Component
+{
+    render(){
+        var links = null;
+
+        if(this.props.appState === AppStates.NOTES){
+            links = <a href="" onClick={this.props.logOutUser}>Log out</a>;
+        }
+
+        return <nav>{links}</nav>;
     }
 }
 
