@@ -71,7 +71,7 @@ export default class MvsNotesApp extends React.Component
         this.requestLoginPage();
     }
 
-    componentDidMount()
+    componentDidUpdate()
     {
         if(this.state.appState === AppStates.NOTES){
             ReactDOM.render(<a href="" onClick={this.logOutUser.bind(this)}>Log out</a>, document.getElementById('nav'));
