@@ -139,7 +139,7 @@ class NoteCreator extends React.Component{
             <form onSubmit={this.handleSubmit} className="stacked_form">
                 <textarea id="new_note"
                     className="text"
-                    cols="40" rows ="8"
+                    rows ="8"
                     name="newNote"
                     onChange={this.handleChange}
                     value={this.state.newNote}></textarea>

@@ -200,6 +200,13 @@ button.note_delete {
     align-items: center; /* align vertical */
 }
 
+#new_note
+{
+    min-width: 190px;
+    max-width: 100%;
+
+}
+
 .tooltip {
     position: relative;
     display: inline-block;
