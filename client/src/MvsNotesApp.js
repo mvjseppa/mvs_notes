@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import {CognitoUserPool, AuthenticationDetails, CognitoUser} from 'amazon-cognito-identity-js';
 import NoteContainer from './Notes';
 
@@ -56,6 +57,25 @@ export default class MvsNotesApp extends React.Component
 
     requestNotesPage(){
         this.setState({ appState: AppStates.NOTES });
+    }
+
+    logOutUser(){
+        console.log("logout");
+
+        const cognitoUser = this.state.userPool.getCurrentUser();
+
+        if (cognitoUser != null) {
+            cognitoUser.signOut();
+        }
+
+        this.requestLoginPage();
+    }
+
+    componentDidMount()
+    {
+        if(this.state.appState === AppStates.NOTES){
+            ReactDOM.render(<a href="" onClick={this.logOutUser.bind(this)}>Log out</a>, document.getElementById('nav'));
+        }
     }
 
     render() {
