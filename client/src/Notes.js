@@ -4,7 +4,10 @@ import $ from 'jquery';
 export default class NoteContainer extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { notes: [] };
+        this.state = {
+            loading: true,
+            notes: []
+        };
     }
 
     componentDidMount() {
@@ -12,6 +15,10 @@ export default class NoteContainer extends React.Component {
     }
 
     getNotes() {
+        if(this.state.notes===[]){
+            this.setState({loading: true});
+        }
+
         $.ajax({
             method: 'GET',
             url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
@@ -24,10 +31,18 @@ export default class NoteContainer extends React.Component {
         .fail((error) => {
             console.log(JSON.stringify(error));
             this.props.requestLoginPage();
+        })
+        .always(() => {
+            this.setState({loading: false});
         });
     }
 
     render() {
+
+        if(this.state.loading){
+            return <div id="user_data"><div className="large_spinner" /></div>
+        }
+
         var noteElements = this.state.notes.map( (note, i) => {
             return (
                 <Note
