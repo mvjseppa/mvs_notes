@@ -16,14 +16,14 @@ export default class NoteContainer extends React.Component {
             method: 'GET',
             url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
             headers: { Authorization: this.props.getToken()},
-            success: (result) => {
-                result.sort(function(a, b){return a.timestamp < b.timestamp});
-                this.setState({notes: result});
-            },
-            error: (error) => {
-                console.log(JSON.stringify(error));
-                this.props.requestLoginPage();
-            }
+        })
+        .done((result) => {
+            result.sort(function(a, b){return a.timestamp < b.timestamp});
+            this.setState({notes: result});
+        })
+        .fail((error) => {
+            console.log(JSON.stringify(error));
+            this.props.requestLoginPage();
         });
     }
 
@@ -57,7 +57,9 @@ export default class NoteContainer extends React.Component {
 class Note extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            deleting: false
+        };
     }
 
     handleClick() {
@@ -65,28 +67,38 @@ class Note extends React.Component{
     }
 
     deleteNote(id) {
-        console.log("deleting: " + id);
+        this.setState({deleting: true});
 
         $.ajax({
             method: 'DELETE',
             url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes/'+id,
             headers: { Authorization: this.props.getToken()},
-            success: (result) => { this.props.updateRequest(); },
-            error: (error) => {
-                console.log(JSON.stringify(error));
-                this.props.requestLoginPage();
-            }
+        })
+        .done((result) => {
+            this.props.updateRequest();
+        })
+        .fail((error) => {
+            console.log(JSON.stringify(error));
+            this.props.requestLoginPage();
+        })
+        .always(() => {
+            this.setState({deleting: false});
         });
     }
 
     render() {
+
+        var deleteButton =
+                <button className="note_delete" onClick={this.handleClick.bind(this)}>x</button>
+
+        if(this.state.deleting){
+            deleteButton = <div className="small_spinner" />
+        }
+
         return(
             <div className="note">
-                <div className="note_controls">
-                    <button className="note_delete" onClick={this.handleClick.bind(this)}>x</button>
-                </div>
+                <div className="note_controls">{deleteButton}</div>
                 <div className="note_contents">{this.props.note_text}</div>
-
                 <div className="tooltip">
                     <span className="tooltiptext">{this.props.note_id}, {this.props.note_time}</span>
                 </div>
@@ -122,14 +134,14 @@ class NoteCreator extends React.Component{
             url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
             headers: { Authorization: this.props.getToken()},
             data: JSON.stringify(noteData),
-            success: (result) => {
-                this.setState({newNote: ""});
-                this.props.updateRequest();
-            },
-            error: (error) => {
-                console.log(JSON.stringify(error));
-                this.props.requestLoginPage();
-            }
+        })
+        .done((result) => {
+            this.setState({newNote: ""});
+            this.props.updateRequest();
+        })
+        .fail((error) => {
+            console.log(JSON.stringify(error));
+            this.props.requestLoginPage();
         });
     }
 
