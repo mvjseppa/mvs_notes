@@ -6,6 +6,7 @@ const AppStates = {
     LOGIN: "login",
     SIGNUP: "signup",
     NOTES: "notes",
+    LOADING: "loading"
 }
 
 export default class MvsNotesApp extends React.Component
@@ -19,12 +20,15 @@ export default class MvsNotesApp extends React.Component
         };
 
         this.state = {
-            appState: AppStates.LOGIN,
+            appState: AppStates.LOADING,
             userPool: new CognitoUserPool(poolData),
         };
 
         if(this.getToken() !== "") {
             this.state.appState = AppStates.NOTES;
+        }
+        else{
+            this.state.appState = AppStates.LOGIN;
         }
     }
 
@@ -58,6 +62,10 @@ export default class MvsNotesApp extends React.Component
         this.setState({ appState: AppStates.NOTES });
     }
 
+    requestLoadingPage(){
+        this.setState({ appState: AppStates.LOADING });
+    }
+
     logOutUser(){
         console.log("logout");
 
@@ -78,7 +86,9 @@ export default class MvsNotesApp extends React.Component
             appMain = (
                 <LoginForm
                     userPool={this.state.userPool}
-                    requestNotesPage={this.requestNotesPage.bind(this)} />
+                    requestNotesPage={this.requestNotesPage.bind(this)}
+                    requestLoadingPage={this.requestLoadingPage.bind(this)}
+                    requestLoginPage={this.requestLoginPage.bind(this)} />
             );
         }
         else if(this.state.appState === AppStates.NOTES) {
@@ -87,6 +97,9 @@ export default class MvsNotesApp extends React.Component
                         getToken={this.getToken.bind(this)}
                         requestLoginPage={this.requestLoginPage.bind(this)}/>
             );
+        }
+        else if(this.state.appState === AppStates.LOADING) {
+            appMain = <div className="large_spinner" />
         }
 
         return(
@@ -137,6 +150,8 @@ class LoginForm extends React.Component
 
     loginUser()
     {
+        this.props.requestLoadingPage();
+
         var cognitoUser = new CognitoUser(
             {Username : this.state.email, Pool : this.props.userPool}
         );
@@ -152,11 +167,13 @@ class LoginForm extends React.Component
 
             onFailure: (err) => {
                 alert(JSON.stringify(err));
+                this.props.requestLoginPage();
             },
 
             mfaRequired: (codeDeliveryDetails) => {
                 var verificationCode = prompt('Please input verification code' ,'');
                 cognitoUser.sendMFACode(verificationCode, this);
+                this.props.requestLoginPage();
             }
         }
 
