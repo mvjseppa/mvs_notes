@@ -24,34 +24,35 @@ export default class MvsNotesApp extends React.Component
             userPool: new CognitoUserPool(poolData),
         };
 
-        if(this.getToken() !== "") {
-            this.state.appState = AppStates.NOTES;
-        }
-        else{
-            this.state.appState = AppStates.LOGIN;
-        }
+        this.getToken()
+        .then((token) => {
+            this.requestNotesPage();
+        })
+        .catch((error) => {
+            this.requestLoginPage();
+        });
     }
 
-    getToken() {
+    getToken(){
+
         const cognitoUser = this.state.userPool.getCurrentUser();
-        var token = "";
+        
+        return new Promise((resolve, reject) => {
 
-        if (cognitoUser != null) {
-            cognitoUser.getSession((err, session) => {
-                if (err || !session.isValid()) {
-                    console.log("session not valid");
-                }
-                else {
-                    token = session.getIdToken().getJwtToken()
-                    console.log(token);
-                }
-            });
-        }
-        else {
-            console.log("User not found.");
-        }
-
-        return token;
+            if (cognitoUser != null) {
+                cognitoUser.getSession((err, session) => {
+                    if (err || !session.isValid()) {
+                        reject("session not valid");
+                    }
+                    else {
+                        resolve(session.getIdToken().getJwtToken());
+                    }
+                });
+            }
+            else {
+                reject("User not found.");
+            }
+        });
     }
 
     requestLoginPage(){

@@ -19,22 +19,26 @@ export default class NoteContainer extends React.Component {
             this.setState({loading: true});
         }
 
-        $.ajax({
-            method: 'GET',
-            url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
-            headers: { Authorization: this.props.getToken()},
+        this.props.getToken()
+        .then((token) => {
+            $.ajax({
+                method: 'GET',
+                url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
+                headers: { Authorization: token},
+            })
+            .done((result) => {
+                result.sort(function(a, b){return a.timestamp < b.timestamp});
+                this.setState({notes: result});
+            })
+            .fail((error) => {
+                console.log(JSON.stringify(error));
+                this.props.requestLoginPage();
+            })
+            .always(() => {
+                this.setState({loading: false});
+            });
         })
-        .done((result) => {
-            result.sort(function(a, b){return a.timestamp < b.timestamp});
-            this.setState({notes: result});
-        })
-        .fail((error) => {
-            console.log(JSON.stringify(error));
-            this.props.requestLoginPage();
-        })
-        .always(() => {
-            this.setState({loading: false});
-        });
+        .catch((error) => {this.props.requestLoginPage()});
     }
 
     render() {
@@ -84,20 +88,26 @@ class Note extends React.Component{
     deleteNote(id) {
         this.setState({deleting: true});
 
-        $.ajax({
-            method: 'DELETE',
-            url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes/'+id,
-            headers: { Authorization: this.props.getToken()},
+        this.props.getToken()
+        .then((token) => {
+            $.ajax({
+                method: 'DELETE',
+                url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes/'+id,
+                headers: { Authorization: token},
+            })
+            .done((result) => {
+                this.props.updateRequest();
+            })
+            .fail((error) => {
+                console.log(JSON.stringify(error));
+                this.props.requestLoginPage();
+            })
+            .always(() => {
+                this.setState({deleting: false});
+            });
         })
-        .done((result) => {
-            this.props.updateRequest();
-        })
-        .fail((error) => {
-            console.log(JSON.stringify(error));
+        .catch((error) => {
             this.props.requestLoginPage();
-        })
-        .always(() => {
-            this.setState({deleting: false});
         });
     }
 
@@ -144,20 +154,26 @@ class NoteCreator extends React.Component{
             color: "0xABCDEF"
         };
 
-        $.ajax({
-            method: 'POST',
-            url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
-            headers: { Authorization: this.props.getToken()},
-            data: JSON.stringify(noteData),
-        })
-        .done((result) => {
-            this.setState({newNote: ""});
-            this.props.updateRequest();
-        })
-        .fail((error) => {
-            console.log(JSON.stringify(error));
-            this.props.requestLoginPage();
-        });
+         this.props.getToken()
+         .then((token) => {
+             $.ajax({
+                 method: 'POST',
+                 url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
+                 headers: { Authorization: token},
+                 data: JSON.stringify(noteData),
+             })
+             .done((result) => {
+                 this.setState({newNote: ""});
+                 this.props.updateRequest();
+             })
+             .fail((error) => {
+                 console.log(JSON.stringify(error));
+                 this.props.requestLoginPage();
+             });
+         })
+         .catch((error) => {
+             this.props.requestLoginPage();
+         });
     }
 
     render() {
