@@ -135,7 +135,10 @@ class Note extends React.Component{
 class NoteCreator extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {newNote: ""};
+        this.state = {
+            editing: false,
+            newNote: ""
+        };
     }
 
     handleChange = event => {
@@ -163,7 +166,7 @@ class NoteCreator extends React.Component{
                  data: JSON.stringify(noteData),
              })
              .done((result) => {
-                 this.setState({newNote: ""});
+                 this.setState({newNote: "", editing: false});
                  this.props.updateRequest();
              })
              .fail((error) => {
@@ -176,7 +179,15 @@ class NoteCreator extends React.Component{
          });
     }
 
+    handleCreateClick(){
+        this.setState({editing: true});
+    }
+
     render() {
+        if(!this.state.editing){
+            return <button className="new_note_button" onClick={this.handleCreateClick.bind(this)}>New note</button>
+        }
+
         return(
             <div className="note">
             <form onSubmit={this.handleSubmit} className="stacked_form">

@@ -157,9 +157,20 @@ button.note_delete {
     font-size: 120%;
 }
 
+.new_note_button{
+    width: 60px;
+    height: 60px;
+    margin: 10px;
+}
+
 .stacked_form{
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+}
+
+#user_data{
+    display: flex;
     align-items: flex-start;
 }
 
