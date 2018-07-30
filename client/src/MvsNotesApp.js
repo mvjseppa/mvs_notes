@@ -36,7 +36,7 @@ export default class MvsNotesApp extends React.Component
     getToken(){
 
         const cognitoUser = this.state.userPool.getCurrentUser();
-        
+
         return new Promise((resolve, reject) => {
 
             if (cognitoUser != null) {
@@ -55,16 +55,25 @@ export default class MvsNotesApp extends React.Component
         });
     }
 
-    requestLoginPage(){
-        this.setState({ appState: AppStates.LOGIN });
+    requestLoginPage(error_msg){
+        this.setState({
+            appState: AppStates.LOGIN,
+            error_msg: error_msg
+        });
     }
 
     requestNotesPage(){
-        this.setState({ appState: AppStates.NOTES });
+        this.setState({
+            appState: AppStates.NOTES,
+            error_msg: ""
+        });
     }
 
     requestLoadingPage(){
-        this.setState({ appState: AppStates.LOADING });
+        this.setState({
+            appState: AppStates.LOADING,
+            error_msg: ""
+        });
     }
 
     logOutUser(){
@@ -109,7 +118,10 @@ export default class MvsNotesApp extends React.Component
                 <Navigation
                     appState={this.state.appState}
                     logOutUser={this.logOutUser.bind(this)} />
-                <main id="main">{appMain}</main>
+                <main id="main">
+                    {appMain}
+                    <p>{this.state.error_msg}</p>
+                </main>
                 <footer></footer>
             </div>
         );
@@ -167,8 +179,12 @@ class LoginForm extends React.Component
             },
 
             onFailure: (err) => {
-                alert(JSON.stringify(err));
-                this.props.requestLoginPage();
+                if(err.code === "UserNotFoundException" || err.code === "NotAuthorizedException"){
+                    this.props.requestLoginPage("Invalid username or password.");
+                }
+                else{
+                    this.props.requestLoginPage(err.message);
+                }
             },
 
             mfaRequired: (codeDeliveryDetails) => {
