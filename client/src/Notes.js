@@ -120,10 +120,16 @@ class Note extends React.Component{
             deleteButton = <div className="small_spinner" />
         }
 
+        var textLines = this.props.note_text.split("\n").map(
+            (line, i) => {
+                return ( <p key={i}>{line}</p> );
+            }
+        );
+
         return(
             <div className="note">
                 <div className="note_controls">{deleteButton}</div>
-                <div className="note_contents">{this.props.note_text}</div>
+                <div className="note_contents">{textLines}</div>
                 <div className="tooltip">
                     <span className="tooltiptext">{this.props.note_id}, {this.props.note_time}</span>
                 </div>
