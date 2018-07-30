@@ -137,6 +137,8 @@ input[type=text], input[type=password] {
 button, input[type=submit] {
     padding-left: 5px;
     padding-right: 5px;
+    margin-top: 5px;
+    margin-right: 5px;
     background-color: #EEEEEE;
     cursor: pointer;
     border-radius: 5px;
@@ -159,8 +161,8 @@ button.note_delete {
 
 .new_note_button{
     width: 60px;
-    height: 60px;
     margin: 10px;
+    font-size: 300%;
 }
 
 .stacked_form{
@@ -170,8 +172,7 @@ button.note_delete {
 }
 
 #user_data{
-    display: flex;
-    align-items: flex-start;
+
 }
 
 .note{
@@ -188,6 +189,10 @@ button.note_delete {
 
     display: flex;
     flex-direction: column;
+}
+
+#note_edit{
+    float: none;
 }
 
 .note_controls{
@@ -217,7 +222,11 @@ button.note_delete {
 {
     min-width: 200px;
     max-width: 100%;
+}
 
+#note_creator
+{
+    min-width: 100%;
 }
 
 .tooltip {

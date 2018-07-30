@@ -145,7 +145,7 @@ class NoteCreator extends React.Component{
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    handleSubmit = event => {
+    handleSaveClick = event => {
         event.preventDefault();
 
         if(this.state.newNote.length === 0){
@@ -179,25 +179,36 @@ class NoteCreator extends React.Component{
          });
     }
 
-    handleCreateClick(){
+    handleCancelClick(){
+        this.setState({editing: false});
+    }
+
+    handleCreateNewClick(){
         this.setState({editing: true});
     }
 
     render() {
         if(!this.state.editing){
-            return <button className="new_note_button" onClick={this.handleCreateClick.bind(this)}>New note</button>
+            return(
+                <div>
+                <button className="new_note_button" onClick={this.handleCreateNewClick.bind(this)}>+</button>
+                </div>
+            );
         }
 
         return(
-            <div className="note">
-            <form onSubmit={this.handleSubmit} className="stacked_form">
+            <div className="note" id="note_edit">
+            <form className="stacked_form">
                 <textarea id="new_note"
                     className="text"
                     rows ="8"
                     name="newNote"
                     onChange={this.handleChange}
                     value={this.state.newNote}></textarea>
-                <input type="submit" value="Save note" />
+                <div>
+                <button onClick={this.handleSaveClick.bind(this)}>Save</button>
+                <button onClick={this.handleCancelClick.bind(this)}>Cancel</button>
+                </div>
             </form>
             </div>
         );
