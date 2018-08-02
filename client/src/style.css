@@ -145,6 +145,7 @@ button, input[type=submit] {
     border: 1px solid #000030;
 
     color: #000030;
+    font-size: 120%;
 }
 
 button:hover, input[type=submit]:hover {
@@ -156,7 +157,7 @@ button:hover, input[type=submit]:hover {
 button.note_delete {
     background-color: transparent;
     border: 0 none;
-    font-size: 120%;
+
 }
 
 .new_note_button{
@@ -191,8 +192,9 @@ button.note_delete {
     flex-direction: column;
 }
 
-#note_edit{
+#note_edit.note{
     float: none;
+    width: 200px;
 }
 
 .note_controls{
@@ -222,7 +224,7 @@ button.note_delete {
 #new_note
 {
     min-width: 200px;
-    max-width: 100%;
+    resize:vertical;
 }
 
 #note_creator

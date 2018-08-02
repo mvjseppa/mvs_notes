@@ -114,7 +114,7 @@ class Note extends React.Component{
     render() {
 
         var deleteButton =
-                <button className="note_delete" onClick={this.handleClick.bind(this)}>x</button>
+                <button className="note_delete" onClick={this.handleClick.bind(this)}>&#10005;</button>
 
         if(this.state.deleting){
             deleteButton = <div className="small_spinner" />
@@ -204,18 +204,16 @@ class NoteCreator extends React.Component{
 
         return(
             <div className="note" id="note_edit">
-            <form className="stacked_form">
                 <textarea id="new_note"
-                    className="text"
                     rows ="8"
+                    cols ="32"
                     name="newNote"
                     onChange={this.handleChange}
                     value={this.state.newNote}></textarea>
                 <div>
-                <button onClick={this.handleSaveClick.bind(this)}>Save</button>
-                <button onClick={this.handleCancelClick.bind(this)}>Cancel</button>
+                <button onClick={this.handleSaveClick.bind(this)}>&#10003;</button>
+                <button onClick={this.handleCancelClick.bind(this)}>&#10005;</button>
                 </div>
-            </form>
             </div>
         );
     }
