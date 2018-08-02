@@ -4,5 +4,8 @@ import './style.css';
 import registerServiceWorker from './registerServiceWorker';
 import MvsNotesApp from './MvsNotesApp.js';
 
-ReactDOM.render(<MvsNotesApp />, document.getElementById('root'));
+const apiUrl =
+    'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes/';
+
+ReactDOM.render(<MvsNotesApp apiUrl={apiUrl}/>, document.getElementById('root'));
 registerServiceWorker();

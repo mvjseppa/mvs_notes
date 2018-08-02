@@ -104,6 +104,7 @@ export default class MvsNotesApp extends React.Component
         else if(this.state.appState === AppStates.NOTES) {
             appMain = (
                 <NoteContainer
+                        apiUrl={this.props.apiUrl}
                         getToken={this.getToken.bind(this)}
                         requestLoginPage={this.requestLoginPage.bind(this)}/>
             );

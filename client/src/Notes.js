@@ -23,7 +23,7 @@ export default class NoteContainer extends React.Component {
         .then((token) => {
             $.ajax({
                 method: 'GET',
-                url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
+                url: this.props.apiUrl,
                 headers: { Authorization: token},
             })
             .done((result) => {
@@ -51,6 +51,7 @@ export default class NoteContainer extends React.Component {
             return (
                 <Note
                     key={i}
+                    apiUrl={this.props.apiUrl}
                     getToken={this.props.getToken}
                     note_text={note.text}
                     note_id={note.id}
@@ -63,6 +64,7 @@ export default class NoteContainer extends React.Component {
         return (
             <div id="user_data">
             <NoteCreator
+                apiUrl={this.props.apiUrl}
                 getToken={this.props.getToken}
                 requestLoginPage={this.props.requestLoginPage}
                 updateRequest={this.getNotes.bind(this)}
@@ -92,7 +94,7 @@ class Note extends React.Component{
         .then((token) => {
             $.ajax({
                 method: 'DELETE',
-                url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes/'+id,
+                url: this.props.apiUrl+id,
                 headers: { Authorization: token},
             })
             .done((result) => {
@@ -114,7 +116,9 @@ class Note extends React.Component{
     render() {
 
         var deleteButton =
-                <button className="note_delete" onClick={this.handleClick.bind(this)}>&#10005;</button>
+                <button
+                    className="note_delete"
+                    onClick={this.handleClick.bind(this)}>&#10005;</button>
 
         if(this.state.deleting){
             deleteButton = <div className="small_spinner" />
@@ -167,7 +171,7 @@ class NoteCreator extends React.Component{
          .then((token) => {
              $.ajax({
                  method: 'POST',
-                 url: 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes',
+                 url: this.props.apiUrl,
                  headers: { Authorization: token},
                  data: JSON.stringify(noteData),
              })
