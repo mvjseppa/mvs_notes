@@ -46,7 +46,7 @@ header {
 nav {
     background-color:#000030;
     color: #EEEEEE;
-    font-size: small;
+    font-size: 100%;
     grid-area: nav;
 
     display: flex;

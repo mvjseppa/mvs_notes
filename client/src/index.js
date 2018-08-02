@@ -12,5 +12,8 @@ const apiUrl =
         'UserPoolId': 'eu-central-1_op50LtdMn'
     };
 
-ReactDOM.render(<MvsNotesApp apiUrl={apiUrl} poolData={poolData}/>, document.getElementById('root'));
+ReactDOM.render(
+    <MvsNotesApp apiUrl={apiUrl} poolData={poolData}/>,
+    document.getElementById('root')
+);
 registerServiceWorker();
