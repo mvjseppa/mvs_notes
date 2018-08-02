@@ -53,9 +53,7 @@ export default class NoteContainer extends React.Component {
                     key={i}
                     apiUrl={this.props.apiUrl}
                     getToken={this.props.getToken}
-                    note_text={note.text}
-                    note_id={note.id}
-                    note_time={note.timestamp}
+                    note_data={note}
                     requestLoginPage={this.props.requestLoginPage}
                     updateRequest={this.getNotes.bind(this)} />
             );
@@ -84,7 +82,7 @@ class Note extends React.Component{
     }
 
     handleClick() {
-        this.deleteNote(this.props.note_id);
+        this.deleteNote(this.props.note_data.id);
     }
 
     deleteNote(id) {
@@ -124,18 +122,18 @@ class Note extends React.Component{
             deleteButton = <div className="small_spinner" />
         }
 
-        var textLines = this.props.note_text.split("\n").map(
+        var textLines = this.props.note_data.text.split("\n").map(
             (line, i) => {
                 return ( <p key={i}>{line}</p> );
             }
         );
 
         return(
-            <div className="note">
+            <div className="note" style={{backgroundColor: this.props.note_data.color}}>
                 <div className="note_controls">{deleteButton}</div>
                 <div className="note_contents">{textLines}</div>
                 <div className="tooltip">
-                    <span className="tooltiptext">{this.props.note_id}, {this.props.note_time}</span>
+                    <span className="tooltiptext">{this.props.note_data.id}, {this.props.note_data.timestamp}</span>
                 </div>
             </div>
         );
@@ -147,12 +145,21 @@ class NoteCreator extends React.Component{
         super(props);
         this.state = {
             editing: false,
+            color: '#A0C000',
             newNote: ""
         };
     }
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value });
+    }
+
+    handleColorClick = event => {
+        var color =
+            event.target.style.backgroundColor;
+        console.log(event.target.id);
+        console.log(color);
+        this.setState({ 'color': color });
     }
 
     handleSaveClick = event => {
@@ -164,7 +171,7 @@ class NoteCreator extends React.Component{
 
         var noteData={
             text: this.state.newNote,
-            color: "0xABCDEF"
+            color: this.state.color
         };
 
          this.props.getToken()
@@ -207,7 +214,7 @@ class NoteCreator extends React.Component{
         }
 
         return(
-            <div className="note" id="note_edit">
+            <div className="note" id="note_edit" style={{backgroundColor: this.state.color}}>
                 <textarea id="new_note"
                     rows ="8"
                     cols ="32"
@@ -215,8 +222,12 @@ class NoteCreator extends React.Component{
                     onChange={this.handleChange}
                     value={this.state.newNote}></textarea>
                 <div>
-                <button onClick={this.handleSaveClick.bind(this)}>&#10003;</button>
-                <button onClick={this.handleCancelClick.bind(this)}>&#10005;</button>
+                    <button id="green_button" style={{backgroundColor: '#00C0A0'}} className="color_button" onClick={this.handleColorClick}/>
+                    <button id="yellow_button" style={{backgroundColor: '#A0C000'}} className="color_button" onClick={this.handleColorClick}/>
+                    <button id="red_button" style={{backgroundColor: '#C01080'}} className="color_button" onClick={this.handleColorClick}/>
+
+                    <button onClick={this.handleSaveClick.bind(this)}>&#10003;</button>
+                    <button onClick={this.handleCancelClick.bind(this)}>&#10005;</button>
                 </div>
             </div>
         );
