@@ -14,14 +14,9 @@ export default class MvsNotesApp extends React.Component
     constructor(props) {
         super(props);
 
-        var poolData = {
-            UserPoolId : 'eu-central-1_op50LtdMn',
-            ClientId : '2hvp9c2sls7f0fq10p8u3t5bt2'
-        };
-
         this.state = {
             appState: AppStates.LOADING,
-            userPool: new CognitoUserPool(poolData),
+            userPool: new CognitoUserPool(props.poolData),
         };
 
         this.getToken()
