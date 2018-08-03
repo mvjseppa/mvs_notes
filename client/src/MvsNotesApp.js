@@ -1,15 +1,17 @@
 import React from 'react';
-import {CognitoUserPool, AuthenticationDetails, CognitoUser} from 'amazon-cognito-identity-js';
-import NoteContainer from './Notes';
+import {CognitoUserPool} from 'amazon-cognito-identity-js';
+import NoteContainer from './NoteContainer';
+import LoginForm from './LoginForm';
+import Navigation from './Navigation';
 
-const AppStates = {
+export const AppStates = {
     LOGIN: "login",
     SIGNUP: "signup",
     NOTES: "notes",
     LOADING: "loading"
 }
 
-export default class MvsNotesApp extends React.Component
+export class MvsNotesApp extends React.Component
 {
     constructor(props) {
         super(props);
@@ -124,87 +126,7 @@ export default class MvsNotesApp extends React.Component
     }
 }
 
-class Navigation extends React.Component
-{
-    render(){
-        var links = null;
 
-        if(this.props.appState === AppStates.NOTES){
-            links = <a href="" onClick={this.props.logOutUser}>Log out</a>;
-        }
-
-        return <nav>{links}</nav>;
-    }
-}
-
-class LoginForm extends React.Component
-{
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            email: "",
-            passwd: ""
-        }
-    }
-
-    handleChange = event => {
-        this.setState({ [event.target.name]: event.target.value });
-    }
-
-    handleSubmit = event => {
-        event.preventDefault();
-        this.loginUser();
-    }
-
-    loginUser()
-    {
-        this.props.requestLoadingPage();
-
-        var cognitoUser = new CognitoUser(
-            {Username : this.state.email, Pool : this.props.userPool}
-        );
-
-        var authDetails = new AuthenticationDetails(
-            {Username : this.state.email, Password : this.state.passwd}
-        );
-
-        var callbacks = {
-            onSuccess: (result) => {
-                this.props.requestNotesPage();
-            },
-
-            onFailure: (err) => {
-                if(err.code === "UserNotFoundException" || err.code === "NotAuthorizedException"){
-                    this.props.requestLoginPage("Invalid username or password.");
-                }
-                else{
-                    this.props.requestLoginPage(err.message);
-                }
-            },
-
-            mfaRequired: (codeDeliveryDetails) => {
-                var verificationCode = prompt('Please input verification code' ,'');
-                cognitoUser.sendMFACode(verificationCode, this);
-                this.props.requestLoginPage();
-            }
-        }
-
-        cognitoUser.authenticateUser(authDetails, callbacks);
-    }
-
-    render() {
-        return(
-            <div id="login">
-                <form onSubmit={this.handleSubmit} className="stacked_form">
-                    <input type="text" name="email" onChange={this.handleChange}/>
-                    <input type="password" name="passwd" onChange={this.handleChange}/>
-                    <input type="submit" value="Login"/>
-                </form>
-            </div>
-        );
-    }
-}
 
 /*
 function createUserCallback(err, result)
