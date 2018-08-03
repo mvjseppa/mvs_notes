@@ -1,17 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import NoteContainer from './NoteContainer';
 import LoginForm from './LoginForm';
+import AppStates from './AppStates';
 import Navigation from './Navigation';
 
-export const AppStates = {
-  LOGIN: 'login',
-  SIGNUP: 'signup',
-  NOTES: 'notes',
-  LOADING: 'loading',
-};
-
-export class MvsNotesApp extends React.Component {
+export default class MvsNotesApp extends React.Component {
   constructor(props) {
     super(props);
 
@@ -75,8 +70,6 @@ export class MvsNotesApp extends React.Component {
   }
 
   logOutUser() {
-    console.log('logout');
-
     const { userPool } = this.state;
     const cognitoUser = userPool.getCurrentUser();
 
@@ -91,6 +84,7 @@ export class MvsNotesApp extends React.Component {
     let appMain = null;
 
     const { appState, userPool, errorMsg } = this.state;
+    const { apiUrl } = this.props;
 
     if (appState === AppStates.LOGIN) {
       appMain = (
@@ -104,7 +98,7 @@ export class MvsNotesApp extends React.Component {
     } else if (appState === AppStates.NOTES) {
       appMain = (
         <NoteContainer
-          apiUrl={this.props.apiUrl}
+          apiUrl={apiUrl}
           getToken={this.getToken}
           requestLoginPage={this.requestLoginPage}
         />
@@ -136,6 +130,11 @@ export class MvsNotesApp extends React.Component {
   }
 }
 
+
+MvsNotesApp.propTypes = {
+  poolData: PropTypes.string.isRequired,
+  apiUrl: PropTypes.string.isRequired,
+};
 
 /*
 function createUserCallback(err, result)

@@ -1,15 +1,22 @@
 import React from 'react';
-import {AppStates} from './MvsNotesApp';
+import AppStates from './AppStates';
 
-export default class Navigation extends React.Component
-{
-    render(){
-        var links = null;
+const Navigation = function Navigation({ appState, logOutUser }) {
+  let links = null;
 
-        if(this.props.appState === AppStates.NOTES){
-            links = <a href="" onClick={this.props.logOutUser}>Log out</a>;
-        }
+  if (appState === AppStates.NOTES) {
+    links = (
+      <a href="" onClick={ logOutUser }>
+        Log out
+      </a>
+    );
+  }
 
-        return <nav>{links}</nav>;
-    }
-}
+  return (
+    <nav>
+      {links}
+    </nav>
+  );
+};
+
+export default Navigation;

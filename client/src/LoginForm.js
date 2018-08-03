@@ -10,13 +10,16 @@ export default class LoginForm extends React.Component
             email: "",
             passwd: ""
         }
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChange = event => {
+    handleChange(event) {
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    handleSubmit = event => {
+    handleSubmit(event) {
         event.preventDefault();
         this.loginUser();
     }
