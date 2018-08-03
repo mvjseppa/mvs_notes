@@ -21,10 +21,10 @@ export class MvsNotesApp extends React.Component {
     };
 
     this.getToken()
-      .then((token) => {
+      .then(() => {
         this.requestNotesPage();
       })
-      .catch((error) => {
+      .catch(() => {
         this.requestLoginPage();
       });
 
@@ -36,18 +36,19 @@ export class MvsNotesApp extends React.Component {
   }
 
   getToken() {
-    const cognitoUser = this.state.userPool.getCurrentUser();
+    const { userPool } = this.state;
+    const cognitoUser = userPool.getCurrentUser();
     return new Promise((resolve, reject) => {
       if (cognitoUser != null) {
         cognitoUser.getSession((err, session) => {
           if (err || !session.isValid()) {
-            reject('session not valid');
+            reject(new Error('session not valid'));
           } else {
             resolve(session.getIdToken().getJwtToken());
           }
         });
       } else {
-        reject('User not found.');
+        reject(new Error('User not found.'));
       }
     });
   }
@@ -55,28 +56,29 @@ export class MvsNotesApp extends React.Component {
   requestLoginPage(errorMsg) {
     this.setState({
       appState: AppStates.LOGIN,
-      error_msg: errorMsg,
+      errorMsg,
     });
   }
 
   requestNotesPage() {
     this.setState({
       appState: AppStates.NOTES,
-      error_msg: '',
+      errorMsg: '',
     });
   }
 
   requestLoadingPage() {
     this.setState({
       appState: AppStates.LOADING,
-      error_msg: '',
+      errorMsg: '',
     });
   }
 
   logOutUser() {
     console.log('logout');
 
-    const cognitoUser = this.state.userPool.getCurrentUser();
+    const { userPool } = this.state;
+    const cognitoUser = userPool.getCurrentUser();
 
     if (cognitoUser != null) {
       cognitoUser.signOut();
@@ -88,16 +90,18 @@ export class MvsNotesApp extends React.Component {
   render() {
     let appMain = null;
 
-    if (this.state.appState === AppStates.LOGIN) {
+    const { appState, userPool, errorMsg } = this.state;
+
+    if (appState === AppStates.LOGIN) {
       appMain = (
         <LoginForm
-          userPool={this.state.userPool}
+          userPool={userPool}
           requestNotesPage={this.requestNotesPage}
           requestLoadingPage={this.requestLoadingPage}
           requestLoginPage={this.requestLoginPage}
         />
       );
-    } else if (this.state.appState === AppStates.NOTES) {
+    } else if (appState === AppStates.NOTES) {
       appMain = (
         <NoteContainer
           apiUrl={this.props.apiUrl}
@@ -105,7 +109,7 @@ export class MvsNotesApp extends React.Component {
           requestLoginPage={this.requestLoginPage}
         />
       );
-    } else if (this.state.appState === AppStates.LOADING) {
+    } else if (appState === AppStates.LOADING) {
       appMain = <div className="large_spinner" />;
     }
 
@@ -117,13 +121,13 @@ export class MvsNotesApp extends React.Component {
           </h1>
         </header>
         <Navigation
-          appState={this.state.appState}
+          appState={appState}
           logOutUser={this.logOutUser}
         />
         <main id="main">
           {appMain}
           <p>
-            {this.state.error_msg}
+            {errorMsg}
           </p>
         </main>
         <footer />
