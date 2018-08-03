@@ -1,131 +1,121 @@
 import React from 'react';
-import {CognitoUserPool} from 'amazon-cognito-identity-js';
+import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import NoteContainer from './NoteContainer';
 import LoginForm from './LoginForm';
 import Navigation from './Navigation';
 
 export const AppStates = {
-    LOGIN: "login",
-    SIGNUP: "signup",
-    NOTES: "notes",
-    LOADING: "loading"
-}
+  LOGIN: 'login',
+  SIGNUP: 'signup',
+  NOTES: 'notes',
+  LOADING: 'loading',
+};
 
-export class MvsNotesApp extends React.Component
-{
-    constructor(props) {
-        super(props);
+export class MvsNotesApp extends React.Component {
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            appState: AppStates.LOADING,
-            userPool: new CognitoUserPool(props.poolData),
-        };
+    this.state = {
+      appState: AppStates.LOADING,
+      userPool: new CognitoUserPool(props.poolData),
+    };
 
-        this.getToken()
-        .then((token) => {
-            this.requestNotesPage();
-        })
-        .catch((error) => {
-            this.requestLoginPage();
-        });
-    }
-
-    getToken(){
-
-        const cognitoUser = this.state.userPool.getCurrentUser();
-
-        return new Promise((resolve, reject) => {
-
-            if (cognitoUser != null) {
-                cognitoUser.getSession((err, session) => {
-                    if (err || !session.isValid()) {
-                        reject("session not valid");
-                    }
-                    else {
-                        resolve(session.getIdToken().getJwtToken());
-                    }
-                });
-            }
-            else {
-                reject("User not found.");
-            }
-        });
-    }
-
-    requestLoginPage(error_msg){
-        this.setState({
-            appState: AppStates.LOGIN,
-            error_msg: error_msg
-        });
-    }
-
-    requestNotesPage(){
-        this.setState({
-            appState: AppStates.NOTES,
-            error_msg: ""
-        });
-    }
-
-    requestLoadingPage(){
-        this.setState({
-            appState: AppStates.LOADING,
-            error_msg: ""
-        });
-    }
-
-    logOutUser(){
-        console.log("logout");
-
-        const cognitoUser = this.state.userPool.getCurrentUser();
-
-        if (cognitoUser != null) {
-            cognitoUser.signOut();
-        }
-
+    this.getToken()
+      .then((token) => {
+        this.requestNotesPage();
+      })
+      .catch((error) => {
         this.requestLoginPage();
+      });
+  }
+
+  getToken() {
+    const cognitoUser = this.state.userPool.getCurrentUser();
+    return new Promise((resolve, reject) => {
+      if (cognitoUser != null) {
+        cognitoUser.getSession((err, session) => {
+          if (err || !session.isValid()) {
+            reject('session not valid');
+          } else {
+            resolve(session.getIdToken().getJwtToken());
+          }
+        });
+      } else {
+        reject('User not found.');
+      }
+    });
+  }
+
+  requestLoginPage(errorMsg) {
+    this.setState({
+      appState: AppStates.LOGIN,
+      error_msg: errorMsg,
+    });
+  }
+
+  requestNotesPage() {
+    this.setState({
+      appState: AppStates.NOTES,
+      error_msg: '',
+    });
+  }
+
+  requestLoadingPage() {
+    this.setState({
+      appState: AppStates.LOADING,
+      error_msg: '',
+    });
+  }
+
+  logOutUser() {
+    console.log('logout');
+
+    const cognitoUser = this.state.userPool.getCurrentUser();
+
+    if (cognitoUser != null) {
+      cognitoUser.signOut();
     }
 
-    render() {
+    this.requestLoginPage();
+  }
 
-        var appMain = null;
+  render() {
+    let appMain = null;
 
-        if(this.state.appState === AppStates.LOGIN) {
-            appMain = (
-                <LoginForm
-                    userPool={this.state.userPool}
-                    requestNotesPage={this.requestNotesPage.bind(this)}
-                    requestLoadingPage={this.requestLoadingPage.bind(this)}
-                    requestLoginPage={this.requestLoginPage.bind(this)} />
-            );
-        }
-        else if(this.state.appState === AppStates.NOTES) {
-            appMain = (
-                <NoteContainer
-                        apiUrl={this.props.apiUrl}
-                        getToken={this.getToken.bind(this)}
-                        requestLoginPage={this.requestLoginPage.bind(this)}/>
-            );
-        }
-        else if(this.state.appState === AppStates.LOADING) {
-            appMain = <div className="large_spinner" />
-        }
-
-        return(
-            <div id="app">
-                <header><h1>Mvs Notes</h1></header>
-                <Navigation
-                    appState={this.state.appState}
-                    logOutUser={this.logOutUser.bind(this)} />
-                <main id="main">
-                    {appMain}
-                    <p>{this.state.error_msg}</p>
-                </main>
-                <footer></footer>
-            </div>
-        );
+    if (this.state.appState === AppStates.LOGIN) {
+      appMain = (
+        <LoginForm
+          userPool={this.state.userPool}
+          requestNotesPage={this.requestNotesPage.bind(this)}
+          requestLoadingPage={this.requestLoadingPage.bind(this)}
+          requestLoginPage={this.requestLoginPage.bind(this)} />
+      );
+    } else if (this.state.appState === AppStates.NOTES) {
+      appMain = (
+        <NoteContainer
+          apiUrl={this.props.apiUrl}
+          getToken={this.getToken.bind(this)}
+          requestLoginPage={this.requestLoginPage.bind(this)}/>
+      );
+    } else if (this.state.appState === AppStates.LOADING) {
+      appMain = <div className="large_spinner" />
     }
+
+    return (
+      <div id="app">
+        <header><h1>Mvs Notes</h1></header>
+        <Navigation
+          appState={this.state.appState}
+          logOutUser={this.logOutUser.bind(this)} />
+        <main id="main">
+          {appMain}
+          <p>{this.state.error_msg}</p>
+        </main>
+        <footer></footer>
+      </div>
+    );
+  }
 }
-
 
 
 /*
