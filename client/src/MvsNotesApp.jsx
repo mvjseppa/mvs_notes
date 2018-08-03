@@ -27,6 +27,12 @@ export class MvsNotesApp extends React.Component {
       .catch((error) => {
         this.requestLoginPage();
       });
+
+    this.requestNotesPage = this.requestNotesPage.bind(this);
+    this.requestLoadingPage = this.requestLoadingPage.bind(this);
+    this.requestLoginPage = this.requestLoginPage.bind(this);
+    this.getToken = this.getToken.bind(this);
+    this.logOutUser = this.logOutUser.bind(this);
   }
 
   getToken() {
@@ -86,32 +92,41 @@ export class MvsNotesApp extends React.Component {
       appMain = (
         <LoginForm
           userPool={this.state.userPool}
-          requestNotesPage={this.requestNotesPage.bind(this)}
-          requestLoadingPage={this.requestLoadingPage.bind(this)}
-          requestLoginPage={this.requestLoginPage.bind(this)} />
+          requestNotesPage={this.requestNotesPage}
+          requestLoadingPage={this.requestLoadingPage}
+          requestLoginPage={this.requestLoginPage}
+        />
       );
     } else if (this.state.appState === AppStates.NOTES) {
       appMain = (
         <NoteContainer
           apiUrl={this.props.apiUrl}
-          getToken={this.getToken.bind(this)}
-          requestLoginPage={this.requestLoginPage.bind(this)}/>
+          getToken={this.getToken}
+          requestLoginPage={this.requestLoginPage}
+        />
       );
     } else if (this.state.appState === AppStates.LOADING) {
-      appMain = <div className="large_spinner" />
+      appMain = <div className="large_spinner" />;
     }
 
     return (
       <div id="app">
-        <header><h1>Mvs Notes</h1></header>
+        <header>
+          <h1>
+            Mvs Notes
+          </h1>
+        </header>
         <Navigation
           appState={this.state.appState}
-          logOutUser={this.logOutUser.bind(this)} />
+          logOutUser={this.logOutUser}
+        />
         <main id="main">
           {appMain}
-          <p>{this.state.error_msg}</p>
+          <p>
+            {this.state.error_msg}
+          </p>
         </main>
-        <footer></footer>
+        <footer />
       </div>
     );
   }
