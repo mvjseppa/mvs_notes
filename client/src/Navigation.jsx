@@ -6,9 +6,9 @@ const Navigation = function Navigation({ appState, logOutUser }) {
 
   if (appState === AppStates.NOTES) {
     links = (
-      <a href="" onClick={ logOutUser }>
+      <button type="button" onClick={logOutUser}>
         Log out
-      </a>
+      </button>
     );
   }
 
