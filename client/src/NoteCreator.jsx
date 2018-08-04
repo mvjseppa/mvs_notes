@@ -23,42 +23,44 @@ export default class NoteCreator extends React.Component {
 
   handleColorClick(event) {
     const color = event.target.style.backgroundColor;
-    console.log(event.target.id);
-    console.log(color);
     this.setState({ color });
   }
 
   handleSaveClick(event) {
     event.preventDefault();
 
-    if (this.state.newNote.length === 0) {
+    const { newNote, color } = this.state;
+    const {
+      getToken, apiUrl, updateRequest, requestLoginPage,
+    } = this.props;
+
+    if (newNote.length === 0) {
       return;
     }
 
     const noteData = {
-      text: this.state.newNote,
-      color: this.state.color,
+      text: newNote,
+      color,
     };
 
-    this.props.getToken()
+    getToken()
       .then((token) => {
         $.ajax({
           method: 'POST',
-          url: this.props.apiUrl,
+          url: apiUrl,
           headers: { Authorization: token },
           data: JSON.stringify(noteData),
         })
           .done((result) => {
             this.setState({ newNote: '', editing: false });
-            this.props.updateRequest();
+            updateRequest();
           })
           .fail((error) => {
-            console.log(JSON.stringify(error));
-            this.props.requestLoginPage();
+            requestLoginPage();
           });
       })
       .catch((error) => {
-        this.props.requestLoginPage();
+        requestLoginPage();
       });
   }
 

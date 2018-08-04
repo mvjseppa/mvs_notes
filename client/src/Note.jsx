@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import NoteData from './NoteData';
 import $ from 'jquery';
+import NoteData from './NoteData';
 
 export default class Note extends React.Component {
   constructor(props) {
