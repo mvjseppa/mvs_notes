@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import AppStates from './AppStates';
 
-const Navigation = function Navigation({ appState, logOutUser }) {
+function Navigation({ appState, logOutUser }) {
   let links = null;
 
   if (appState === AppStates.NOTES) {
@@ -17,6 +18,11 @@ const Navigation = function Navigation({ appState, logOutUser }) {
       {links}
     </nav>
   );
+}
+
+Navigation.propTypes = {
+  appState: PropTypes.string.isRequired,
+  logOutUser: PropTypes.func.isRequired,
 };
 
 export default Navigation;
