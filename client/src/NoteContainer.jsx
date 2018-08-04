@@ -55,7 +55,7 @@ export default class NoteContainer extends React.Component {
                     key={i}
                     apiUrl={this.props.apiUrl}
                     getToken={this.props.getToken}
-                    note_data={note}
+                    noteData={note}
                     requestLoginPage={this.props.requestLoginPage}
                     updateRequest={this.getNotes.bind(this)} />
             );
