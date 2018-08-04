@@ -12,7 +12,7 @@ const poolData = {
 };
 
 ReactDOM.render(
-  <MvsNotesApp apiUrl={apiUrl} poolData={poolData}/>,
-  document.getElementById('root')
+  <MvsNotesApp apiUrl={apiUrl} poolData={poolData} />,
+  document.getElementById('root'),
 );
 registerServiceWorker();
