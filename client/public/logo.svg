@@ -1,0 +1,19 @@
+<svg width="160" height="160" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="162" width="162" y="-1" x="-1"/>
+  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <rect transform="rotate(-18 42.22223663330066,52.12251281738282) " rx="5" stroke="#000" id="svg_2" height="57.356014" width="55.333215" y="23.444504" x="14.555631" stroke-width="0" fill="#26afaf"/>
+  <text transform="rotate(-18 40.78123474121092,55.324642181396484) " font-style="normal" font-weight="normal" xml:space="preserve" text-anchor="start" font-family="'Palatino Linotype', 'Book Antiqua', Palatino, serif" font-size="24" id="svg_5" y="60.666532" x="29.444602" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">M</text>
+  <rect transform="rotate(6 73.33328247070271,115.01126861572266) " rx="5" stroke="#000" id="svg_6" height="57.356014" width="55.333215" y="86.333251" x="45.666672" stroke-width="0" fill="#abdd4d"/>
+  <text transform="rotate(6 72.32812499999994,114.31250000000004) " font-style="normal" font-weight="normal" xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="24" id="svg_7" y="122.666392" x="64.333413" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">V</text>
+  <rect transform="rotate(-3 120.44429016113271,69.67802429199222) " rx="5" stroke="#000" id="svg_8" height="57.356014" width="55.333215" y="41.000021" x="92.77768" stroke-width="0" fill="#9439a0"/>
+  <text transform="rotate(-3 120.63629913330051,70.44178771972649) " font-style="normal" font-weight="normal" xml:space="preserve" text-anchor="start" font-family="'Courier New', Courier, monospace" font-size="24" id="svg_9" y="76.888718" x="113.444416" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">S</text>
+ </g>
+</svg>

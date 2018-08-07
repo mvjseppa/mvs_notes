@@ -110,6 +110,7 @@ export default class MvsNotesApp extends React.Component {
     return (
       <div id="app">
         <header>
+          <img src="logo.svg" height="96" widht="96" alt="Mvs-Notes logo" />
           <h1>
             Mvs Notes
           </h1>
