@@ -21,7 +21,7 @@ export default class Note extends React.Component {
     this.setState({ deleting: true });
 
     const {
-      getToken, updateRequest, requestLoginPage, apiUrl,
+      getToken, requestDelete, requestLoginPage, apiUrl,
     } = this.props;
 
     getToken()
@@ -32,7 +32,8 @@ export default class Note extends React.Component {
           headers: { Authorization: token },
         })
           .done(() => {
-            updateRequest();
+            requestDelete(id);
+            // updateRequest();
           })
           .fail((error) => {
             console.log(JSON.stringify(error));

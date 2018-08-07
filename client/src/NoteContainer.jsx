@@ -10,6 +10,9 @@ export default class NoteContainer extends React.Component {
       loading: true,
       notes: [],
     };
+
+    this.getNotes = this.getNotes.bind(this);
+    this.requestDelete = this.requestDelete.bind(this);
   }
 
   componentDidMount() {
@@ -21,11 +24,13 @@ export default class NoteContainer extends React.Component {
       this.setState({ loading: true });
     }
 
-    this.props.getToken()
+    const { apiUrl, getToken, requestLoginPage } = this.props;
+
+    getToken()
       .then((token) => {
         $.ajax({
           method: 'GET',
-          url: this.props.apiUrl,
+          url: apiUrl,
           headers: { Authorization: token },
         })
           .done((result) => {
@@ -34,16 +39,23 @@ export default class NoteContainer extends React.Component {
           })
           .fail((error) => {
             console.log(JSON.stringify(error));
-            this.props.requestLoginPage();
+            requestLoginPage();
           })
           .always(() => {
             this.setState({ loading: false });
           });
       })
-      .catch((error) => { this.props.requestLoginPage(); });
+      .catch((error) => { requestLoginPage(); });
+  }
+
+  requestDelete(noteId) {
+    const newNotes = this.state.notes.filter(note => note.id !== noteId);
+    this.setState({ notes: newNotes });
   }
 
   render() {
+    const { apiUrl, getToken, requestLoginPage } = this.props;
+
     if (this.state.loading) {
       return (
         <div id="user_data">
@@ -52,24 +64,25 @@ export default class NoteContainer extends React.Component {
       );
     }
 
-    const noteElements = this.state.notes.map((note, i) => (
+    const noteElements = this.state.notes.map(note => (
       <Note
-        key={i}
-        apiUrl={this.props.apiUrl}
-        getToken={this.props.getToken}
+        key={note.id}
+        apiUrl={apiUrl}
+        getToken={getToken}
         noteData={note}
-        requestLoginPage={this.props.requestLoginPage}
-        updateRequest={this.getNotes.bind(this)}
+        requestLoginPage={requestLoginPage}
+        requestDelete={this.requestDelete}
+        updateRequest={this.getNotes}
       />
     ));
 
     return (
       <div id="user_data">
         <NoteCreator
-          apiUrl={this.props.apiUrl}
-          getToken={this.props.getToken}
-          requestLoginPage={this.props.requestLoginPage}
-          updateRequest={this.getNotes.bind(this)}
+          apiUrl={apiUrl}
+          getToken={getToken}
+          requestLoginPage={requestLoginPage}
+          updateRequest={this.getNotes}
         />
         { noteElements }
       </div>
