@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import NoteContainer from './NoteContainer';
 import LoginForm from './LoginForm';
+import SignUpForm from './SignUpForm';
 import AppStates from './AppStates';
 import Navigation from './Navigation';
 
@@ -26,6 +27,7 @@ export default class MvsNotesApp extends React.Component {
     this.requestNotesPage = this.requestNotesPage.bind(this);
     this.requestLoadingPage = this.requestLoadingPage.bind(this);
     this.requestLoginPage = this.requestLoginPage.bind(this);
+    this.requestSignUpPage = this.requestSignUpPage.bind(this);
     this.getToken = this.getToken.bind(this);
     this.logOutUser = this.logOutUser.bind(this);
   }
@@ -69,6 +71,13 @@ export default class MvsNotesApp extends React.Component {
     });
   }
 
+  requestSignUpPage() {
+    this.setState({
+      appState: AppStates.SIGNUP,
+      errorMsg: '',
+    });
+  }
+
   logOutUser() {
     const { userPool } = this.state;
     const cognitoUser = userPool.getCurrentUser();
@@ -80,32 +89,49 @@ export default class MvsNotesApp extends React.Component {
     this.requestLoginPage();
   }
 
-  render() {
-    let appMain = null;
-
-    const { appState, userPool, errorMsg } = this.state;
+  renderAppMain(appState) {
     const { apiUrl } = this.props;
+    const { userPool } = this.state;
 
-    if (appState === AppStates.LOGIN) {
-      appMain = (
-        <LoginForm
-          userPool={userPool}
-          requestNotesPage={this.requestNotesPage}
-          requestLoadingPage={this.requestLoadingPage}
-          requestLoginPage={this.requestLoginPage}
-        />
-      );
-    } else if (appState === AppStates.NOTES) {
-      appMain = (
-        <NoteContainer
-          apiUrl={apiUrl}
-          getToken={this.getToken}
-          requestLoginPage={this.requestLoginPage}
-        />
-      );
-    } else if (appState === AppStates.LOADING) {
-      appMain = <div className="large_spinner" />;
+    switch (appState) {
+      default:
+      case AppStates.LOGIN:
+        return (
+          <LoginForm
+            userPool={userPool}
+            requestNotesPage={this.requestNotesPage}
+            requestLoadingPage={this.requestLoadingPage}
+            requestLoginPage={this.requestLoginPage}
+          />
+        );
+
+      case AppStates.NOTES:
+        return (
+          <NoteContainer
+            apiUrl={apiUrl}
+            getToken={this.getToken}
+            requestLoginPage={this.requestLoginPage}
+          />
+        );
+
+      case AppStates.SIGNUP:
+        return (
+          <SignUpForm
+            userPool={userPool}
+            requestLoadingPage={this.requestLoadingPage}
+            requestLoginPage={this.requestLoginPage}
+          />
+        );
+
+      case AppStates.LOADING:
+        return <div className="large_spinner" />;
     }
+  }
+
+  render() {
+    const { appState, errorMsg } = this.state;
+
+    const appMain = this.renderAppMain(appState);
 
     return (
       <div id="app">
@@ -117,7 +143,8 @@ export default class MvsNotesApp extends React.Component {
         </header>
         <Navigation
           appState={appState}
-          logOutUser={this.logOutUser}
+          requestLogOut={this.logOutUser}
+          requestSignUp={this.requestSignUpPage}
         />
         <main id="main">
           {appMain}
@@ -136,24 +163,3 @@ MvsNotesApp.propTypes = {
   poolData: PropTypes.string.isRequired,
   apiUrl: PropTypes.string.isRequired,
 };
-
-/*
-function createUserCallback(err, result)
-{
-    if (err) {
-        alert(err);
-        return;
-    }
-    var uname = result.user.getUsername();
-    console.log('user name is ' + uname);
-
-    if(uname.length > 0){
-        $('#confirm_user_link').trigger('click');
-        $('#email').val(uname);
-    }
-    else{
-        $('#email').val("");
-    }
-    $('#passwd').val("");
-}
-*/
