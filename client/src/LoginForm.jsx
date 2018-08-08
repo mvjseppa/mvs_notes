@@ -1,5 +1,6 @@
 import React from 'react';
 import { AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
+import AppStates from './AppStates';
 
 export default class LoginForm extends React.Component {
   constructor(props) {
@@ -24,7 +25,7 @@ export default class LoginForm extends React.Component {
   }
 
   loginUser() {
-    this.props.requestLoadingPage();
+    this.props.requestPage(AppStates.LOADING, '');
 
     const cognitoUser = new CognitoUser(
       { Username: this.state.email, Pool: this.props.userPool },
@@ -36,21 +37,21 @@ export default class LoginForm extends React.Component {
 
     const callbacks = {
       onSuccess: (result) => {
-        this.props.requestNotesPage();
+        this.props.requestPage(AppStates.NOTES, '');
       },
 
       onFailure: (err) => {
         if (err.code === 'UserNotFoundException' || err.code === 'NotAuthorizedException') {
-          this.props.requestLoginPage('Invalid username or password.');
+          this.props.requestPage(AppStates.LOGIN, 'Invalid username or password.');
         } else {
-          this.props.requestLoginPage(err.message);
+          this.props.requestPage(AppStates.LOGIN, err.message);
         }
       },
 
       mfaRequired: (codeDeliveryDetails) => {
         const verificationCode = prompt('Please input verification code', '');
         cognitoUser.sendMFACode(verificationCode, this);
-        this.props.requestLoginPage();
+        this.props.requestPage(AppStates.LOGIN, '');
       },
     };
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
+import AppStates from './AppStates';
 
 export default class NoteCreator extends React.Component {
   constructor(props) {
@@ -31,7 +32,7 @@ export default class NoteCreator extends React.Component {
 
     const { newNote, color } = this.state;
     const {
-      getToken, apiUrl, updateRequest, requestLoginPage,
+      getToken, apiUrl, updateRequest, requestPage,
     } = this.props;
 
     if (newNote.length === 0) {
@@ -56,11 +57,11 @@ export default class NoteCreator extends React.Component {
             updateRequest();
           })
           .fail((error) => {
-            requestLoginPage();
+            requestPage(AppStates.LOGIN, error.message);
           });
       })
       .catch((error) => {
-        requestLoginPage();
+        requestPage(AppStates.LOGIN, error.message);
       });
   }
 

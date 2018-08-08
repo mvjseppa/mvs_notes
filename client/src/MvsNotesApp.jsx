@@ -14,22 +14,20 @@ export default class MvsNotesApp extends React.Component {
     this.state = {
       appState: AppStates.LOADING,
       userPool: new CognitoUserPool(props.poolData),
+      message: '',
     };
+
+    this.requestPage = this.requestPage.bind(this);
+    this.getToken = this.getToken.bind(this);
+    this.logOutUser = this.logOutUser.bind(this);
 
     this.getToken()
       .then(() => {
-        this.requestNotesPage();
+        this.requestPage(AppStates.NOTES, '');
       })
-      .catch(() => {
-        this.requestLoginPage();
+      .catch((error) => {
+        this.requestPage(AppStates.LOGIN, '');
       });
-
-    this.requestNotesPage = this.requestNotesPage.bind(this);
-    this.requestLoadingPage = this.requestLoadingPage.bind(this);
-    this.requestLoginPage = this.requestLoginPage.bind(this);
-    this.requestSignUpPage = this.requestSignUpPage.bind(this);
-    this.getToken = this.getToken.bind(this);
-    this.logOutUser = this.logOutUser.bind(this);
   }
 
   getToken() {
@@ -50,31 +48,10 @@ export default class MvsNotesApp extends React.Component {
     });
   }
 
-  requestLoginPage(errorMsg) {
+  requestPage(appState, message) {
     this.setState({
-      appState: AppStates.LOGIN,
-      errorMsg,
-    });
-  }
-
-  requestNotesPage() {
-    this.setState({
-      appState: AppStates.NOTES,
-      errorMsg: '',
-    });
-  }
-
-  requestLoadingPage() {
-    this.setState({
-      appState: AppStates.LOADING,
-      errorMsg: '',
-    });
-  }
-
-  requestSignUpPage() {
-    this.setState({
-      appState: AppStates.SIGNUP,
-      errorMsg: '',
+      appState,
+      message,
     });
   }
 
@@ -86,7 +63,7 @@ export default class MvsNotesApp extends React.Component {
       cognitoUser.signOut();
     }
 
-    this.requestLoginPage();
+    this.requestPage(AppStates.LOGIN, 'Logged out.');
   }
 
   renderAppMain(appState) {
@@ -99,9 +76,8 @@ export default class MvsNotesApp extends React.Component {
         return (
           <LoginForm
             userPool={userPool}
-            requestNotesPage={this.requestNotesPage}
-            requestLoadingPage={this.requestLoadingPage}
-            requestLoginPage={this.requestLoginPage}
+            requestPage={this.requestPage}
+            setMessage={this.setMessage}
           />
         );
 
@@ -110,7 +86,7 @@ export default class MvsNotesApp extends React.Component {
           <NoteContainer
             apiUrl={apiUrl}
             getToken={this.getToken}
-            requestLoginPage={this.requestLoginPage}
+            requestPage={this.requestPage}
           />
         );
 
@@ -118,8 +94,8 @@ export default class MvsNotesApp extends React.Component {
         return (
           <SignUpForm
             userPool={userPool}
-            requestLoadingPage={this.requestLoadingPage}
-            requestLoginPage={this.requestLoginPage}
+            requestPage={this.requestPage}
+            setMessage={this.setMessage}
           />
         );
 
@@ -129,8 +105,7 @@ export default class MvsNotesApp extends React.Component {
   }
 
   render() {
-    const { appState, errorMsg } = this.state;
-
+    const { appState, message } = this.state;
     const appMain = this.renderAppMain(appState);
 
     return (
@@ -144,12 +119,12 @@ export default class MvsNotesApp extends React.Component {
         <Navigation
           appState={appState}
           requestLogOut={this.logOutUser}
-          requestSignUp={this.requestSignUpPage}
+          requestPage={this.requestPage}
         />
         <main id="main">
           {appMain}
           <p>
-            {errorMsg}
+            {message}
           </p>
         </main>
         <footer />

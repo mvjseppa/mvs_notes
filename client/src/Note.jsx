@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 import NoteData from './NoteData';
+import AppStates from './AppStates';
 
 export default class Note extends React.Component {
   constructor(props) {
@@ -21,7 +22,7 @@ export default class Note extends React.Component {
     this.setState({ deleting: true });
 
     const {
-      getToken, requestDelete, requestLoginPage, apiUrl,
+      getToken, requestDelete, requestPage, apiUrl,
     } = this.props;
 
     getToken()
@@ -33,18 +34,16 @@ export default class Note extends React.Component {
         })
           .done(() => {
             requestDelete(id);
-            // updateRequest();
           })
           .fail((error) => {
-            console.log(JSON.stringify(error));
-            requestLoginPage();
+            requestPage(AppStates.LOGIN, error.message);
           })
           .always(() => {
             this.setState({ deleting: false });
           });
       })
-      .catch(() => {
-        requestLoginPage();
+      .catch((error) => {
+        requestPage(AppStates.LOGIN, error.message);
       });
   }
 
@@ -95,8 +94,8 @@ export default class Note extends React.Component {
 
 Note.propTypes = {
   getToken: PropTypes.func.isRequired,
-  updateRequest: PropTypes.func.isRequired,
-  requestLoginPage: PropTypes.func.isRequired,
+  requestDelete: PropTypes.func.isRequired,
+  requestPage: PropTypes.func.isRequired,
   apiUrl: PropTypes.string.isRequired,
   noteData: PropTypes.instanceOf(NoteData).isRequired,
 };

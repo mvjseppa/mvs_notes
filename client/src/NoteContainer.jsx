@@ -2,6 +2,7 @@ import React from 'react';
 import $ from 'jquery';
 import Note from './Note';
 import NoteCreator from './NoteCreator';
+import AppStates from './AppStates';
 
 export default class NoteContainer extends React.Component {
   constructor(props) {
@@ -24,7 +25,7 @@ export default class NoteContainer extends React.Component {
       this.setState({ loading: true });
     }
 
-    const { apiUrl, getToken, requestLoginPage } = this.props;
+    const { apiUrl, getToken, requestPage } = this.props;
 
     getToken()
       .then((token) => {
@@ -38,14 +39,13 @@ export default class NoteContainer extends React.Component {
             this.setState({ notes: result });
           })
           .fail((error) => {
-            console.log(JSON.stringify(error));
-            requestLoginPage();
+            requestPage(AppStates.LOGIN, error.message);
           })
           .always(() => {
             this.setState({ loading: false });
           });
       })
-      .catch((error) => { requestLoginPage(); });
+      .catch((error) => { requestPage(AppStates.LOGIN, error.message); });
   }
 
   requestDelete(noteId) {
@@ -54,7 +54,7 @@ export default class NoteContainer extends React.Component {
   }
 
   render() {
-    const { apiUrl, getToken, requestLoginPage } = this.props;
+    const { apiUrl, getToken, requestPage } = this.props;
 
     if (this.state.loading) {
       return (
@@ -70,7 +70,7 @@ export default class NoteContainer extends React.Component {
         apiUrl={apiUrl}
         getToken={getToken}
         noteData={note}
-        requestLoginPage={requestLoginPage}
+        requestPage={requestPage}
         requestDelete={this.requestDelete}
         updateRequest={this.getNotes}
       />
@@ -81,7 +81,7 @@ export default class NoteContainer extends React.Component {
         <NoteCreator
           apiUrl={apiUrl}
           getToken={getToken}
-          requestLoginPage={requestLoginPage}
+          requestPage={requestPage}
           updateRequest={this.getNotes}
         />
         { noteElements }

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import AppStates from './AppStates';
 
-function Navigation({ appState, requestLogOut, requestSignUp }) {
+function Navigation({ appState, requestLogOut, requestPage }) {
   let links = null;
 
   if (appState === AppStates.NOTES) {
@@ -13,7 +13,7 @@ function Navigation({ appState, requestLogOut, requestSignUp }) {
     );
   } else if (appState === AppStates.LOGIN) {
     links = (
-      <button type="button" onClick={requestSignUp}>
+      <button type="button" onClick={() => { requestPage(AppStates.SIGNUP, 'Enter valid email address and select a password to sign up.'); }}>
         Sign Up
       </button>
     );
@@ -29,7 +29,7 @@ function Navigation({ appState, requestLogOut, requestSignUp }) {
 Navigation.propTypes = {
   appState: PropTypes.string.isRequired,
   requestLogOut: PropTypes.func.isRequired,
-  requestSignUp: PropTypes.func.isRequired,
+  requestPage: PropTypes.func.isRequired,
 };
 
 export default Navigation;
