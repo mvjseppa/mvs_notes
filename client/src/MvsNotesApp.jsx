@@ -4,6 +4,7 @@ import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import NoteContainer from './NoteContainer';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
+import ConfirmUserForm from './ConfirmUserForm';
 import AppStates from './AppStates';
 import Navigation from './Navigation';
 
@@ -15,11 +16,14 @@ export default class MvsNotesApp extends React.Component {
       appState: AppStates.LOADING,
       userPool: new CognitoUserPool(props.poolData),
       message: '',
+      email: '',
+      passwd: '',
     };
 
     this.requestPage = this.requestPage.bind(this);
     this.getToken = this.getToken.bind(this);
     this.logOutUser = this.logOutUser.bind(this);
+    this.setAuthenticationDetails = this.setAuthenticationDetails.bind(this);
 
     this.getToken()
       .then(() => {
@@ -48,6 +52,13 @@ export default class MvsNotesApp extends React.Component {
     });
   }
 
+  setAuthenticationDetails(email, passwd) {
+    this.setState({
+      email,
+      passwd,
+    });
+  }
+
   requestPage(appState, message) {
     this.setState({
       appState,
@@ -68,7 +79,7 @@ export default class MvsNotesApp extends React.Component {
 
   renderAppMain(appState) {
     const { apiUrl } = this.props;
-    const { userPool } = this.state;
+    const { userPool, email } = this.state;
 
     switch (appState) {
       default:
@@ -77,7 +88,7 @@ export default class MvsNotesApp extends React.Component {
           <LoginForm
             userPool={userPool}
             requestPage={this.requestPage}
-            setMessage={this.setMessage}
+            setAuthenticationDetails={this.setAuthenticationDetails}
           />
         );
 
@@ -95,7 +106,15 @@ export default class MvsNotesApp extends React.Component {
           <SignUpForm
             userPool={userPool}
             requestPage={this.requestPage}
-            setMessage={this.setMessage}
+          />
+        );
+
+      case AppStates.CONFIRM_USER:
+        return (
+          <ConfirmUserForm
+            email={email}
+            userPool={userPool}
+            requestPage={this.requestPage}
           />
         );
 

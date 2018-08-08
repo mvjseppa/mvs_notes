@@ -21,11 +21,14 @@ export default class LoginForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    this.props.setAuthenticationDetails(this.state.email, this.state.passwd);
     this.loginUser();
   }
 
   loginUser() {
-    this.props.requestPage(AppStates.LOADING, '');
+    const { requestPage, setAuthenticationDetails } = this.props;
+
+    requestPage(AppStates.LOADING, '');
 
     const cognitoUser = new CognitoUser(
       { Username: this.state.email, Pool: this.props.userPool },
@@ -37,21 +40,23 @@ export default class LoginForm extends React.Component {
 
     const callbacks = {
       onSuccess: (result) => {
-        this.props.requestPage(AppStates.NOTES, '');
+        requestPage(AppStates.NOTES, '');
       },
 
       onFailure: (err) => {
         if (err.code === 'UserNotFoundException' || err.code === 'NotAuthorizedException') {
-          this.props.requestPage(AppStates.LOGIN, 'Invalid username or password.');
+          requestPage(AppStates.LOGIN, 'Invalid username or password.');
+        } else if (err.code === 'UserNotConfirmedException') {
+          requestPage(AppStates.CONFIRM_USER, err.message);
         } else {
-          this.props.requestPage(AppStates.LOGIN, err.message);
+          requestPage(AppStates.LOGIN, err.message);
         }
       },
 
       mfaRequired: (codeDeliveryDetails) => {
         const verificationCode = prompt('Please input verification code', '');
         cognitoUser.sendMFACode(verificationCode, this);
-        this.props.requestPage(AppStates.LOGIN, '');
+        requestPage(AppStates.LOGIN, '');
       },
     };
 

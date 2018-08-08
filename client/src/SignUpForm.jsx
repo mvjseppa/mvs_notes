@@ -26,7 +26,7 @@ export default class SignUpForm extends React.Component {
 
   signUpUser() {
     const {
-      requestPage, userPool, setMessage,
+      requestPage, userPool,
     } = this.props;
     const { email, passwd } = this.state;
 
@@ -41,18 +41,17 @@ export default class SignUpForm extends React.Component {
 
     userPool.signUp(email, passwd, [attributeEmail], null, (err, result) => {
       if (err) {
-        setMessage(err.message);
+        requestPage(AppStates.SIGNUP, err.message);
         return;
       }
 
-      // const uname = result.user.getUsername();
       requestPage(AppStates.LOGIN, 'Sign up ok. Please login.');
     });
   }
 
   render() {
     return (
-      <div id="login">
+      <div id="signup">
         <h1>
           To sign up enter your email address and a password.
         </h1>
