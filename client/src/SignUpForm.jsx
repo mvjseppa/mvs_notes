@@ -21,6 +21,7 @@ export default class SignUpForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    this.props.setAuthenticationDetails(this.state.email, this.state.passwd);
     this.signUpUser();
   }
 
@@ -31,8 +32,6 @@ export default class SignUpForm extends React.Component {
     const { email, passwd } = this.state;
 
     requestPage(AppStates.LOADING, '');
-
-    console.log(`createUser ${email} ${passwd}`);
 
     const attributeEmail = new CognitoUserAttribute({
       Name: 'email',

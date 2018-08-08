@@ -87,6 +87,7 @@ export default class MvsNotesApp extends React.Component {
         return (
           <LoginForm
             userPool={userPool}
+            email={email}
             requestPage={this.requestPage}
             setAuthenticationDetails={this.setAuthenticationDetails}
           />
@@ -106,6 +107,7 @@ export default class MvsNotesApp extends React.Component {
           <SignUpForm
             userPool={userPool}
             requestPage={this.requestPage}
+            setAuthenticationDetails={this.setAuthenticationDetails}
           />
         );
 

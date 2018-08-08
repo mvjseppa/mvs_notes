@@ -7,7 +7,7 @@ export default class LoginForm extends React.Component {
     super(props);
 
     this.state = {
-      email: '',
+      email: props.email,
       passwd: '',
     };
 
@@ -26,7 +26,7 @@ export default class LoginForm extends React.Component {
   }
 
   loginUser() {
-    const { requestPage, setAuthenticationDetails } = this.props;
+    const { requestPage } = this.props;
 
     requestPage(AppStates.LOADING, '');
 
@@ -67,7 +67,7 @@ export default class LoginForm extends React.Component {
     return (
       <div id="login">
         <form onSubmit={this.handleSubmit} className="stacked_form">
-          <input type="text" name="email" onChange={this.handleChange} />
+          <input type="text" name="email" value={this.state.email} onChange={this.handleChange} />
           <input type="password" name="passwd" onChange={this.handleChange} />
           <input type="submit" value="Login" />
         </form>
