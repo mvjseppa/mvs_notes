@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { deleteNote } from '../actions/index';
+import { deleteNote } from '../actions/NotesActions';
 
 class Note extends React.Component {
   constructor(props) {
@@ -15,8 +15,8 @@ class Note extends React.Component {
   }
 
   handleClick() {
-    const { deleteNote, noteData } = this.props;
-    deleteNote(noteData.id);
+    const { deleteNote, noteData, token } = this.props;
+    deleteNote(noteData.id, token);
   }
 
   render() {
@@ -65,12 +65,15 @@ class Note extends React.Component {
 }
 
 Note.propTypes = {
-  getToken: PropTypes.func.isRequired,
   requestPage: PropTypes.func.isRequired,
 };
+
+function mapStateToProps({ user }) {
+  return { token: user };
+}
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ deleteNote }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(Note);
+export default connect(mapStateToProps, mapDispatchToProps)(Note);

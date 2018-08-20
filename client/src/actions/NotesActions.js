@@ -20,7 +20,7 @@ export function deleteNote(id, authToken) {
 
   return {
     type: DELETE_NOTE,
-    payload: request,
+    payload: { id, request },
   };
 }
 

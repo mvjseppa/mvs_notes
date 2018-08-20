@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getNotes } from '../actions/index';
+import { getNotes } from '../actions/NotesActions';
 
 import Note from './Note';
 import NoteCreator from './NoteCreator';
@@ -9,18 +9,15 @@ import AppStates from './AppStates';
 
 class NoteContainer extends React.Component {
   componentDidMount() {
-    const { getToken, requestPage } = this.props;
-
-    getToken()
-      .then((token) => {
-        this.props.getNotes(token);
-      })
-      .catch((error) => { requestPage(AppStates.LOGIN, error.message); });
+    if (this.props.token === '') {
+      this.props.requestPage(AppStates.LOGIN);
+    }
+    this.props.getNotes(this.props.token);
   }
 
   render() {
     const {
-      getToken, requestPage, notes,
+      requestPage, notes,
     } = this.props;
 
     console.log(notes);
@@ -36,7 +33,6 @@ class NoteContainer extends React.Component {
     const noteElements = notes.map(note => (
       <Note
         key={note.id}
-        getToken={getToken}
         noteData={note}
         requestPage={requestPage}
       />
@@ -45,7 +41,6 @@ class NoteContainer extends React.Component {
     return (
       <div id="user_data">
         <NoteCreator
-          getToken={getToken}
           requestPage={requestPage}
         />
         { noteElements }
@@ -54,9 +49,9 @@ class NoteContainer extends React.Component {
   }
 }
 
-function mapStateToProps({ notes }) {
+function mapStateToProps({ notes, user }) {
   console.log(notes);
-  return { notes };
+  return { notes, token: user };
 }
 
 function mapDispatchToProps(dispatch) {

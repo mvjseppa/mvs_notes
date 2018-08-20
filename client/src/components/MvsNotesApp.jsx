@@ -1,6 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import NoteContainer from './NoteContainer';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
@@ -8,48 +8,20 @@ import ConfirmUserForm from './ConfirmUserForm';
 import AppStates from './AppStates';
 import Navigation from './Navigation';
 
-export default class MvsNotesApp extends React.Component {
+class MvsNotesApp extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      appState: AppStates.LOADING,
-      userPool: new CognitoUserPool(props.poolData),
+      appState: AppStates.LOGIN,
       message: '',
       email: '',
       passwd: '',
     };
 
     this.requestPage = this.requestPage.bind(this);
-    this.getToken = this.getToken.bind(this);
     this.logOutUser = this.logOutUser.bind(this);
     this.setAuthenticationDetails = this.setAuthenticationDetails.bind(this);
-
-    this.getToken()
-      .then(() => {
-        this.requestPage(AppStates.NOTES, '');
-      })
-      .catch((error) => {
-        this.requestPage(AppStates.LOGIN, '');
-      });
-  }
-
-  getToken() {
-    const { userPool } = this.state;
-    const cognitoUser = userPool.getCurrentUser();
-    return new Promise((resolve, reject) => {
-      if (cognitoUser != null) {
-        cognitoUser.getSession((err, session) => {
-          if (err || !session.isValid()) {
-            reject(new Error('session not valid'));
-          } else {
-            resolve(session.getIdToken().getJwtToken());
-          }
-        });
-      } else {
-        reject(new Error('User not found.'));
-      }
-    });
   }
 
   setAuthenticationDetails(email, passwd) {
@@ -78,15 +50,33 @@ export default class MvsNotesApp extends React.Component {
   }
 
   renderAppMain(appState) {
-    const { apiUrl } = this.props;
+    const { apiUrl, token } = this.props;
     const { userPool, email } = this.state;
 
+    if (token) {
+      return (
+        <NoteContainer
+          apiUrl={apiUrl}
+          getToken={this.getToken}
+          requestPage={this.requestPage}
+        />
+      );
+    }
+
+    return (
+      <LoginForm
+        email={email}
+        requestPage={this.requestPage}
+        setAuthenticationDetails={this.setAuthenticationDetails}
+      />
+    );
+
+    /*
     switch (appState) {
       default:
       case AppStates.LOGIN:
         return (
           <LoginForm
-            userPool={userPool}
             email={email}
             requestPage={this.requestPage}
             setAuthenticationDetails={this.setAuthenticationDetails}
@@ -123,6 +113,7 @@ export default class MvsNotesApp extends React.Component {
       case AppStates.LOADING:
         return <div className="large_spinner" />;
     }
+    */
   }
 
   render() {
@@ -155,7 +146,9 @@ export default class MvsNotesApp extends React.Component {
 }
 
 
-MvsNotesApp.propTypes = {
-  poolData: PropTypes.string.isRequired,
-  apiUrl: PropTypes.string.isRequired,
-};
+function mapStateToProps({ user }) {
+  console.log(user);
+  return { token: user };
+}
+
+export default connect(mapStateToProps, null)(MvsNotesApp);

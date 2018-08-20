@@ -1,4 +1,4 @@
-import { GET_NOTES, DELETE_NOTE, CREATE_NOTE } from '../actions/index';
+import { GET_NOTES, DELETE_NOTE, CREATE_NOTE } from '../actions/NotesActions';
 
 export default function (state = [], action) {
   console.log('action received:', action.payload);

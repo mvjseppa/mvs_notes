@@ -1,8 +1,10 @@
 import React from 'react';
-import { AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { loginUser } from '../actions/UserActions';
 import AppStates from './AppStates';
 
-export default class LoginForm extends React.Component {
+class LoginForm extends React.Component {
   constructor(props) {
     super(props);
 
@@ -22,13 +24,16 @@ export default class LoginForm extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     this.props.setAuthenticationDetails(this.state.email, this.state.passwd);
-    this.loginUser();
+    this.props.loginUser(this.state.email, this.state.passwd);
+    this.props.requestPage(AppStates.LOADING, '');
   }
 
+  /*
   loginUser() {
-    const { requestPage } = this.props;
 
+    const { requestPage } = this.props;
     requestPage(AppStates.LOADING, '');
+
 
     const cognitoUser = new CognitoUser(
       { Username: this.state.email, Pool: this.props.userPool },
@@ -62,6 +67,7 @@ export default class LoginForm extends React.Component {
 
     cognitoUser.authenticateUser(authDetails, callbacks);
   }
+  */
 
   render() {
     return (
@@ -75,3 +81,10 @@ export default class LoginForm extends React.Component {
     );
   }
 }
+
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ loginUser }, dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(LoginForm);
