@@ -1,8 +1,10 @@
 import React from 'react';
-import $ from 'jquery';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import AppStates from './AppStates';
+import { createNote } from '../actions/index';
 
-export default class NoteCreator extends React.Component {
+class NoteCreator extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,7 +34,7 @@ export default class NoteCreator extends React.Component {
 
     const { newNote, color } = this.state;
     const {
-      getToken, apiUrl, updateRequest, requestPage,
+      getToken, requestPage,
     } = this.props;
 
     if (newNote.length === 0) {
@@ -46,6 +48,8 @@ export default class NoteCreator extends React.Component {
 
     getToken()
       .then((token) => {
+        this.props.createNote(noteData, token);
+        /*
         $.ajax({
           method: 'POST',
           url: apiUrl,
@@ -59,6 +63,7 @@ export default class NoteCreator extends React.Component {
           .fail((error) => {
             requestPage(AppStates.LOGIN, error.message);
           });
+          */
       })
       .catch((error) => {
         requestPage(AppStates.LOGIN, error.message);
@@ -110,3 +115,10 @@ export default class NoteCreator extends React.Component {
     );
   }
 }
+
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ createNote }, dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(NoteCreator);

@@ -1,10 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import $ from 'jquery';
-import NoteData from './NoteData';
-import AppStates from './AppStates';
+import { deleteNote } from '../actions/index';
 
-export default class Note extends React.Component {
+class Note extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,36 +15,8 @@ export default class Note extends React.Component {
   }
 
   handleClick() {
-    this.deleteNote(this.props.noteData.id);
-  }
-
-  deleteNote(id) {
-    this.setState({ deleting: true });
-
-    const {
-      getToken, requestDelete, requestPage, apiUrl,
-    } = this.props;
-
-    getToken()
-      .then((token) => {
-        $.ajax({
-          method: 'DELETE',
-          url: apiUrl + id,
-          headers: { Authorization: token },
-        })
-          .done(() => {
-            requestDelete(id);
-          })
-          .fail((error) => {
-            requestPage(AppStates.LOGIN, error.message);
-          })
-          .always(() => {
-            this.setState({ deleting: false });
-          });
-      })
-      .catch((error) => {
-        requestPage(AppStates.LOGIN, error.message);
-      });
+    const { deleteNote, noteData } = this.props;
+    deleteNote(noteData.id);
   }
 
   render() {
@@ -94,8 +66,11 @@ export default class Note extends React.Component {
 
 Note.propTypes = {
   getToken: PropTypes.func.isRequired,
-  requestDelete: PropTypes.func.isRequired,
   requestPage: PropTypes.func.isRequired,
-  apiUrl: PropTypes.string.isRequired,
-  noteData: PropTypes.instanceOf(NoteData).isRequired,
 };
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ deleteNote }, dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(Note);
