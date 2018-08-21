@@ -30,3 +30,13 @@ export function loginUser(Username, Password) {
     payload: request,
   };
 }
+
+export function logoutUser() {
+  const cognitoUser = userPool.getCurrentUser();
+
+  if (cognitoUser != null) {
+    cognitoUser.signOut();
+  }
+
+  return { type: LOGOUT_USER };
+}

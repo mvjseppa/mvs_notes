@@ -17,7 +17,6 @@ class MvsNotesApp extends React.Component {
       passwd: '',
     };
 
-    this.logOutUser = this.logOutUser.bind(this);
     this.setAuthenticationDetails = this.setAuthenticationDetails.bind(this);
   }
 
@@ -26,19 +25,6 @@ class MvsNotesApp extends React.Component {
       email,
       passwd,
     });
-  }
-
-  logOutUser() {
-    /*
-    const { userPool } = this.state;
-    const cognitoUser = userPool.getCurrentUser();
-
-    if (cognitoUser != null) {
-      cognitoUser.signOut();
-    }
-
-    this.requestPage(AppStates.LOGIN, 'Logged out.');
-    */
   }
 
   render() {
