@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import AppStates from './AppStates';
 import { createNote } from '../actions/NotesActions';
 
 class NoteCreator extends React.Component {
@@ -33,7 +32,6 @@ class NoteCreator extends React.Component {
     event.preventDefault();
 
     const { newNote, color } = this.state;
-    const { requestPage } = this.props;
 
     if (newNote.length === 0) {
       return;

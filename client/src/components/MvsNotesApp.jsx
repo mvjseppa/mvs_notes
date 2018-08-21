@@ -6,7 +6,6 @@ import NoteContainer from './NoteContainer';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
 import ConfirmUserForm from './ConfirmUserForm';
-import AppStates from './AppStates';
 import Navigation from './Navigation';
 
 class MvsNotesApp extends React.Component {
@@ -42,48 +41,8 @@ class MvsNotesApp extends React.Component {
     */
   }
 
-  renderAppMain(appState) {
-    switch (appState) {
-      default:
-      case AppStates.LOGIN:
-        return (
-          <LoginForm
-            email={this.state.email}
-            setAuthenticationDetails={this.setAuthenticationDetails}
-          />
-        );
-
-      case AppStates.NOTES:
-        return <NoteContainer />;
-
-      /*
-      case AppStates.SIGNUP:
-        return (
-          <SignUpForm
-            userPool={userPool}
-            requestPage={this.requestPage}
-            setAuthenticationDetails={this.setAuthenticationDetails}
-          />
-        );
-
-
-      case AppStates.CONFIRM_USER:
-        return (
-          <ConfirmUserForm
-            email={email}
-            userPool={userPool}
-          />
-        );
-      */
-
-      case AppStates.LOADING:
-        return <div className="large_spinner" />;
-    }
-  }
-
   render() {
     const { appState, message } = this.props;
-    const appMain = this.renderAppMain(appState);
 
     return (
       <div id="app">
@@ -102,6 +61,7 @@ class MvsNotesApp extends React.Component {
           <BrowserRouter>
             <Switch>
               <Route path="/login" component={LoginForm} />
+              <Route path="/signup" component={SignUpForm} />
               <Route path="/" component={NoteContainer} />
             </Switch>
           </BrowserRouter>

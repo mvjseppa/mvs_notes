@@ -1,6 +1,5 @@
 import React from 'react';
 import { CognitoUser } from 'amazon-cognito-identity-js';
-import AppStates from './AppStates';
 
 export default class SignUpForm extends React.Component {
   constructor(props) {
@@ -31,11 +30,11 @@ export default class SignUpForm extends React.Component {
     cognitoUser.confirmRegistration(this.state.confirmation, true,
       (err, result) => {
         if (err) {
-          requestPage(AppStates.LOGIN, err.message);
+          // requestPage(AppStates.LOGIN, err.message);
           return;
         }
         alert(`call result: ${result}`);
-        requestPage(AppStates.NOTES, '');
+        // requestPage(AppStates.NOTES, '');
       });
   }
 

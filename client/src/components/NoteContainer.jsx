@@ -2,10 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { getNotes } from '../actions/NotesActions';
-
 import Note from './Note';
 import NoteCreator from './NoteCreator';
-import AppStates from './AppStates';
 
 class NoteContainer extends React.Component {
   componentDidMount() {

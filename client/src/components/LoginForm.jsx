@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { loginUser } from '../actions/UserActions';
-import AppStates from './AppStates';
 
 class LoginForm extends React.Component {
   constructor(props) {

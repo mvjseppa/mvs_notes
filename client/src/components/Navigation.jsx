@@ -1,26 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import AppStates from './AppStates';
 
 function Navigation({ appState, requestLogOut }) {
   let links = null;
 
-  if (appState === AppStates.NOTES) {
-    links = (
-      withRouter(({ history }) => (
-        <button
-          type="button"
-          onClick={() => {
-            requestLogOut();
-            history.push('/login');
-          }}
-        >
+  links = (
+    withRouter(({ history }) => (
+      <button
+        type="button"
+        onClick={() => {
+          requestLogOut();
+          history.push('/login');
+        }}
+      >
           Log out
-        </button>
-      ))
-    );
-  }
+      </button>
+    ))
+  );
+
   /*
   else if (appState === AppStates.LOGIN) {
     links = (

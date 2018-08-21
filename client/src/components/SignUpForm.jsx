@@ -1,6 +1,5 @@
 import React from 'react';
 import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
-import AppStates from './AppStates';
 
 export default class SignUpForm extends React.Component {
   constructor(props) {
@@ -31,7 +30,7 @@ export default class SignUpForm extends React.Component {
     } = this.props;
     const { email, passwd } = this.state;
 
-    requestPage(AppStates.LOADING, '');
+    // requestPage(AppStates.LOADING, '');
 
     const attributeEmail = new CognitoUserAttribute({
       Name: 'email',
@@ -40,11 +39,11 @@ export default class SignUpForm extends React.Component {
 
     userPool.signUp(email, passwd, [attributeEmail], null, (err, result) => {
       if (err) {
-        requestPage(AppStates.SIGNUP, err.message);
-        return;
+        // requestPage(AppStates.SIGNUP, err.message);
+
       }
 
-      requestPage(AppStates.LOGIN, 'Sign up ok. Please login.');
+      // requestPage(AppStates.LOGIN, 'Sign up ok. Please login.');
     });
   }
 
