@@ -45,33 +45,29 @@ class MvsNotesApp extends React.Component {
     const { appState, message } = this.props;
 
     return (
-      <div id="app">
-        <header>
-          <img src="logo.svg" height="96" widht="96" alt="Mvs-Notes logo" />
-          <h1>
+      <BrowserRouter>
+        <div id="app">
+          <header>
+            <img src="logo.svg" height="96" widht="96" alt="Mvs-Notes logo" />
+            <h1>
             Mvs Notes
-          </h1>
-        </header>
-        <Navigation
-          appState={appState}
-          requestLogOut={this.logOutUser}
-        />
-        <main id="main">
+            </h1>
+          </header>
+          <nav>
+            <Route path="/" component={Navigation} />
+          </nav>
+          <main id="main">
 
-          <BrowserRouter>
             <Switch>
               <Route path="/login" component={LoginForm} />
               <Route path="/signup" component={SignUpForm} />
               <Route path="/" component={NoteContainer} />
             </Switch>
-          </BrowserRouter>
 
-          <p>
-            {message}
-          </p>
-        </main>
-        <footer />
-      </div>
+          </main>
+          <footer />
+        </div>
+      </BrowserRouter>
     );
   }
 }
