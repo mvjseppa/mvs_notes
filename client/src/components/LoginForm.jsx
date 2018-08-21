@@ -7,8 +7,10 @@ class LoginForm extends React.Component {
   constructor(props) {
     super(props);
 
+    const email = props.email ? props.email : '';
+
     this.state = {
-      email: props.email,
+      email,
       passwd: '',
       pending: false,
     };
@@ -86,7 +88,7 @@ class LoginForm extends React.Component {
       <div id="login">
         <form onSubmit={this.handleSubmit} className="stacked_form">
           <input type="text" name="email" value={this.state.email} onChange={this.handleChange} />
-          <input type="password" name="passwd" onChange={this.handleChange} />
+          <input type="password" value={this.state.value} name="passwd" onChange={this.handleChange} />
           <input type="submit" value="Login" />
         </form>
       </div>
