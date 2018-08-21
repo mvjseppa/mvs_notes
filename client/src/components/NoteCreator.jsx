@@ -41,10 +41,13 @@ class NoteCreator extends React.Component {
       text: newNote,
       color,
     };
+
+    this.props.createNote(noteData, this.props.token);
+    this.setState({ editing: false, newNote: '' });
   }
 
   handleCancelClick() {
-    this.setState({ editing: false });
+    this.setState({ editing: false, newNote: '' });
   }
 
   handleCreateNewClick() {

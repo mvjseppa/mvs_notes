@@ -21,7 +21,7 @@ class NoteContainer extends React.Component {
 
     console.log(notes);
 
-    if (!notes) {
+    if (!notes || notes === []) {
       return (
         <div id="user_data">
           <div className="large_spinner" />

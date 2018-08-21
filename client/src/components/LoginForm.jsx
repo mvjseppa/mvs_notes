@@ -10,6 +10,7 @@ class LoginForm extends React.Component {
     this.state = {
       email: props.email,
       passwd: '',
+      pending: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -19,6 +20,7 @@ class LoginForm extends React.Component {
   componentDidUpdate(prevProps) {
     console.log('loginform update:', this.props.token);
     if (this.props.token !== '') {
+      this.setState({ pending: false });
       this.props.history.push('/');
     }
   }
@@ -31,6 +33,7 @@ class LoginForm extends React.Component {
     event.preventDefault();
     // this.props.setAuthenticationDetails(this.state.email, this.state.passwd);
     this.props.loginUser(this.state.email, this.state.passwd);
+    this.setState({ pending: true });
   }
 
   /*
@@ -75,6 +78,10 @@ class LoginForm extends React.Component {
   */
 
   render() {
+    if (this.state.pending) {
+      return <div className="large_spinner" />;
+    }
+
     return (
       <div id="login">
         <form onSubmit={this.handleSubmit} className="stacked_form">

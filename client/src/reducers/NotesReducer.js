@@ -8,7 +8,7 @@ export default function (state = [], action) {
       return action.payload.data.sort((a, b) => a.timestamp < b.timestamp);
 
     case DELETE_NOTE:
-      return state;
+      return state.filter(note => note.id !== action.payload.id);
 
     case CREATE_NOTE:
       return [action.payload.data, ...state];
