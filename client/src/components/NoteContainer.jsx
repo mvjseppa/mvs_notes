@@ -7,21 +7,20 @@ import NoteCreator from './NoteCreator';
 
 class NoteContainer extends React.Component {
   componentDidMount() {
-    if (this.props.token === '') {
-      this.props.history.push('/login');
+    const { token, history, getNotes } = this.props;
+    if (token === '') {
+      history.push('/login');
     } else {
-      this.props.getNotes(this.props.token);
+      getNotes(token);
+      console.log('get notes triggered');
     }
   }
 
   render() {
-    const {
-      requestPage, notes,
-    } = this.props;
+    const { notes } = this.props;
 
-    console.log(notes);
-
-    if (!notes || notes === []) {
+    if (!notes || notes.length === 0) {
+      console.log('loading notes...');
       return (
         <div id="user_data">
           <div className="large_spinner" />
@@ -29,19 +28,15 @@ class NoteContainer extends React.Component {
       );
     }
 
+    console.log('rendering notes...', notes);
+
     const noteElements = notes.map(note => (
-      <Note
-        key={note.id}
-        noteData={note}
-        requestPage={requestPage}
-      />
+      <Note key={note.id} noteData={note} />
     ));
 
     return (
       <div id="user_data">
-        <NoteCreator
-          requestPage={requestPage}
-        />
+        <NoteCreator />
         { noteElements }
       </div>
     );
@@ -49,7 +44,6 @@ class NoteContainer extends React.Component {
 }
 
 function mapStateToProps({ notes, user }) {
-  console.log(notes);
   return { notes, token: user };
 }
 
