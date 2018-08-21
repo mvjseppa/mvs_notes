@@ -1,12 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import NoteContainer from './NoteContainer';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
 import ConfirmUserForm from './ConfirmUserForm';
 import Navigation from './Navigation';
+import { loadSession } from '../actions/UserActions';
 
 class MvsNotesApp extends React.Component {
   constructor(props) {
@@ -18,6 +19,10 @@ class MvsNotesApp extends React.Component {
     };
 
     this.setAuthenticationDetails = this.setAuthenticationDetails.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.loadSession();
   }
 
   setAuthenticationDetails(email, passwd) {
@@ -64,4 +69,8 @@ function mapStateToProps({ user }) {
   return { token: user };
 }
 
-export default connect(mapStateToProps, null)(MvsNotesApp);
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ loadSession }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MvsNotesApp);

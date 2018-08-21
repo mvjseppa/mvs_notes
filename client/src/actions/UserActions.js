@@ -1,5 +1,6 @@
 import { AuthenticationDetails, CognitoUser, CognitoUserPool } from 'amazon-cognito-identity-js';
 
+export const LOAD_SESSION = 'LOAD_SESSION';
 export const LOGIN_USER = 'LOGIN_USER';
 export const LOGOUT_USER = 'LOGOUT_USER';
 export const SIGNUP_USER = 'SIGNUP_USER';
@@ -39,4 +40,23 @@ export function logoutUser() {
   }
 
   return { type: LOGOUT_USER };
+}
+
+export function loadSession() {
+  const cognitoUser = userPool.getCurrentUser();
+  const request = new Promise((resolve, reject) => {
+    if (cognitoUser != null) {
+      cognitoUser.getSession((err, session) => {
+        if (err || !session.isValid()) {
+          reject(new Error('session not valid'));
+        } else {
+          resolve(session.getIdToken().getJwtToken());
+        }
+      });
+    } else {
+      reject(new Error('User not found.'));
+    }
+  });
+
+  return { type: LOAD_SESSION, payload: request };
 }
