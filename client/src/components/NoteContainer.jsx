@@ -10,9 +10,10 @@ import AppStates from './AppStates';
 class NoteContainer extends React.Component {
   componentDidMount() {
     if (this.props.token === '') {
-      this.props.requestPage(AppStates.LOGIN);
+      this.props.history.push('/login');
+    } else {
+      this.props.getNotes(this.props.token);
     }
-    this.props.getNotes(this.props.token);
   }
 
   render() {

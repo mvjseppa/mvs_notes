@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import NoteContainer from './NoteContainer';
 import LoginForm from './LoginForm';
@@ -13,13 +14,10 @@ class MvsNotesApp extends React.Component {
     super(props);
 
     this.state = {
-      appState: AppStates.LOGIN,
-      message: '',
       email: '',
       passwd: '',
     };
 
-    this.requestPage = this.requestPage.bind(this);
     this.logOutUser = this.logOutUser.bind(this);
     this.setAuthenticationDetails = this.setAuthenticationDetails.bind(this);
   }
@@ -31,14 +29,8 @@ class MvsNotesApp extends React.Component {
     });
   }
 
-  requestPage(appState, message) {
-    this.setState({
-      appState,
-      message,
-    });
-  }
-
   logOutUser() {
+    /*
     const { userPool } = this.state;
     const cognitoUser = userPool.getCurrentUser();
 
@@ -47,51 +39,24 @@ class MvsNotesApp extends React.Component {
     }
 
     this.requestPage(AppStates.LOGIN, 'Logged out.');
+    */
   }
 
   renderAppMain(appState) {
-    const { apiUrl, token } = this.props;
-    const { userPool, email } = this.state;
-
-    if (token) {
-      return (
-        <NoteContainer
-          apiUrl={apiUrl}
-          getToken={this.getToken}
-          requestPage={this.requestPage}
-        />
-      );
-    }
-
-    return (
-      <LoginForm
-        email={email}
-        requestPage={this.requestPage}
-        setAuthenticationDetails={this.setAuthenticationDetails}
-      />
-    );
-
-    /*
     switch (appState) {
       default:
       case AppStates.LOGIN:
         return (
           <LoginForm
-            email={email}
-            requestPage={this.requestPage}
+            email={this.state.email}
             setAuthenticationDetails={this.setAuthenticationDetails}
           />
         );
 
       case AppStates.NOTES:
-        return (
-          <NoteContainer
-            apiUrl={apiUrl}
-            getToken={this.getToken}
-            requestPage={this.requestPage}
-          />
-        );
+        return <NoteContainer />;
 
+      /*
       case AppStates.SIGNUP:
         return (
           <SignUpForm
@@ -101,23 +66,23 @@ class MvsNotesApp extends React.Component {
           />
         );
 
+
       case AppStates.CONFIRM_USER:
         return (
           <ConfirmUserForm
             email={email}
             userPool={userPool}
-            requestPage={this.requestPage}
           />
         );
+      */
 
       case AppStates.LOADING:
         return <div className="large_spinner" />;
     }
-    */
   }
 
   render() {
-    const { appState, message } = this.state;
+    const { appState, message } = this.props;
     const appMain = this.renderAppMain(appState);
 
     return (
@@ -131,10 +96,16 @@ class MvsNotesApp extends React.Component {
         <Navigation
           appState={appState}
           requestLogOut={this.logOutUser}
-          requestPage={this.requestPage}
         />
         <main id="main">
-          {appMain}
+
+          <BrowserRouter>
+            <Switch>
+              <Route path="/login" component={LoginForm} />
+              <Route path="/" component={NoteContainer} />
+            </Switch>
+          </BrowserRouter>
+
           <p>
             {message}
           </p>

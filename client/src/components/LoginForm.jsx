@@ -17,15 +17,21 @@ class LoginForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidUpdate(prevProps) {
+    console.log('loginform update:', this.props.token);
+    if (this.props.token !== '') {
+      this.props.history.push('/');
+    }
+  }
+
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.setAuthenticationDetails(this.state.email, this.state.passwd);
+    // this.props.setAuthenticationDetails(this.state.email, this.state.passwd);
     this.props.loginUser(this.state.email, this.state.passwd);
-    this.props.requestPage(AppStates.LOADING, '');
   }
 
   /*
@@ -82,9 +88,12 @@ class LoginForm extends React.Component {
   }
 }
 
+function mapStateToProps({ user }) {
+  return { token: user };
+}
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ loginUser }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(LoginForm);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
