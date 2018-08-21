@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import { deleteNote } from '../actions/NotesActions';
 
 class Note extends React.Component {
@@ -17,6 +16,7 @@ class Note extends React.Component {
   handleClick() {
     const { deleteNote, noteData, token } = this.props;
     deleteNote(noteData.id, token);
+    this.setState({ deleting: true });
   }
 
   render() {
@@ -63,10 +63,6 @@ class Note extends React.Component {
     );
   }
 }
-
-Note.propTypes = {
-  requestPage: PropTypes.func.isRequired,
-};
 
 function mapStateToProps({ user }) {
   return { token: user };
