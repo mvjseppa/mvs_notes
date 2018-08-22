@@ -46,7 +46,7 @@ class NoteContainer extends React.Component {
 }
 
 function mapStateToProps({ notes, user }) {
-  return { notes, token: user };
+  return { notes, token: user.token };
 }
 
 function mapDispatchToProps(dispatch) {

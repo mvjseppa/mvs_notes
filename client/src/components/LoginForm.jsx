@@ -12,7 +12,6 @@ class LoginForm extends React.Component {
     this.state = {
       email,
       passwd: '',
-      pending: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -20,9 +19,7 @@ class LoginForm extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('loginform update:', this.props.token);
-    if (this.props.token !== '') {
-      this.setState({ pending: false });
+    if (this.props.user.token !== '') {
       this.props.history.push('/');
       console.log('redirect to notes');
     }
@@ -81,7 +78,7 @@ class LoginForm extends React.Component {
   */
 
   render() {
-    if (this.state.pending) {
+    if (this.props.user.pending) {
       return <div className="large_spinner" />;
     }
 
@@ -98,7 +95,7 @@ class LoginForm extends React.Component {
 }
 
 function mapStateToProps({ user }) {
-  return { token: user };
+  return { user };
 }
 
 function mapDispatchToProps(dispatch) {

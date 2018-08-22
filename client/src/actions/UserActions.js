@@ -15,7 +15,7 @@ const userPool = new CognitoUserPool({
 
 function loginFailed(error) {
   console.log('login failed:', error.message);
-  return { type: LOGIN_FAILED, payload: '' };
+  return { type: LOGIN_FAILED, payload: error };
 }
 
 function tokenAcquired(token) {
@@ -34,9 +34,13 @@ export function requestLogin(Username, Password) {
     });
   });
 
-  return dispatch => request
-    .then((token) => { dispatch(tokenAcquired(token)); })
-    .catch((error) => { dispatch(loginFailed(error)); });
+  return (dispatch) => {
+    dispatch({ type: REQUEST_LOGIN });
+
+    request
+      .then((token) => { dispatch(tokenAcquired(token)); })
+      .catch((error) => { dispatch(loginFailed(error)); });
+  };
 }
 
 export function logoutUser() {

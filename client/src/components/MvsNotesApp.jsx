@@ -46,6 +46,9 @@ class MvsNotesApp extends React.Component {
             <Route path="/" component={Navigation} />
           </nav>
           <main id="main">
+            <div>
+              {this.props.message}
+            </div>
 
             <Switch>
               <Route path="/login" component={LoginForm} />
@@ -64,7 +67,11 @@ class MvsNotesApp extends React.Component {
 
 function mapStateToProps({ user }) {
   console.log(user);
-  return { token: user };
+  const message = user.error ? user.error.message : '';
+  return {
+    message,
+    token: user.token,
+  };
 }
 
 function mapDispatchToProps(dispatch) {

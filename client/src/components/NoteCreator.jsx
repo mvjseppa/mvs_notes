@@ -93,7 +93,7 @@ class NoteCreator extends React.Component {
 }
 
 function mapStateToProps({ user }) {
-  return { token: user };
+  return { token: user.token };
 }
 
 function mapDispatchToProps(dispatch) {
