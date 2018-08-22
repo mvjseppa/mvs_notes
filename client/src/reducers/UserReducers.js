@@ -1,16 +1,17 @@
-import { LOGIN_USER, LOGOUT_USER, LOAD_SESSION } from '../actions/UserActions';
+import {
+  LOGIN_FAILED,
+  TOKEN_ACQUIRED,
+  LOGOUT_USER,
+} from '../actions/UserActions';
 
 export default function (state = '', action) {
   switch (action.type) {
-    case LOGIN_USER:
+    case TOKEN_ACQUIRED:
       return action.payload;
 
+    case LOGIN_FAILED:
     case LOGOUT_USER:
       return '';
-
-    case LOAD_SESSION:
-      console.log('LOAD_SESSION action received:', action.payload);
-      return action.payload;
 
     default:
       return state;

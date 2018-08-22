@@ -33,8 +33,6 @@ class MvsNotesApp extends React.Component {
   }
 
   render() {
-    const { appState, message } = this.props;
-
     return (
       <BrowserRouter>
         <div id="app">

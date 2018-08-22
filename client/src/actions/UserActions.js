@@ -1,7 +1,9 @@
 import { AuthenticationDetails, CognitoUser, CognitoUserPool } from 'amazon-cognito-identity-js';
 
 export const LOAD_SESSION = 'LOAD_SESSION';
-export const LOGIN_USER = 'LOGIN_USER';
+export const TOKEN_ACQUIRED = 'TOKEN_ACQUIRED';
+export const REQUEST_LOGIN = 'REQUEST_LOGIN';
+export const LOGIN_FAILED = 'LOGIN_FAILED';
 export const LOGOUT_USER = 'LOGOUT_USER';
 export const SIGNUP_USER = 'SIGNUP_USER';
 export const CONFIRM_USER = 'CONFIRM_USER';
@@ -11,25 +13,30 @@ const userPool = new CognitoUserPool({
   UserPoolId: 'eu-central-1_op50LtdMn',
 });
 
+function loginFailed(error) {
+  console.log('login failed:', error.message);
+  return { type: LOGIN_FAILED, payload: '' };
+}
 
-export function loginUser(Username, Password) {
+function tokenAcquired(token) {
+  return { type: TOKEN_ACQUIRED, payload: token };
+}
+
+export function requestLogin(Username, Password) {
   const cognitoUser = new CognitoUser({ Username, Pool: userPool });
   const authDetails = new AuthenticationDetails({ Username, Password });
 
   const request = new Promise((resolve, reject) => {
-    const callbacks = {
+    cognitoUser.authenticateUser(authDetails, {
       onSuccess: (result) => { resolve(result.getIdToken().getJwtToken()); },
       onFailure: (err) => { reject(err); },
       mfaRequired: (codeDeliveryDetails) => { reject(codeDeliveryDetails); },
-    };
-
-    cognitoUser.authenticateUser(authDetails, callbacks);
+    });
   });
 
-  return {
-    type: LOGIN_USER,
-    payload: request,
-  };
+  return dispatch => request
+    .then((token) => { dispatch(tokenAcquired(token)); })
+    .catch((error) => { dispatch(loginFailed(error)); });
 }
 
 export function logoutUser() {
@@ -58,5 +65,8 @@ export function loadSession() {
     }
   });
 
-  return { type: LOAD_SESSION, payload: request };
+
+  return dispatch => request
+    .then((token) => { dispatch(tokenAcquired(token)); })
+    .catch((error) => { dispatch(loginFailed(error)); });
 }

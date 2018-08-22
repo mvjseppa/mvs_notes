@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { loginUser } from '../actions/UserActions';
+import { requestLogin } from '../actions/UserActions';
 
 class LoginForm extends React.Component {
   constructor(props) {
@@ -24,6 +24,7 @@ class LoginForm extends React.Component {
     if (this.props.token !== '') {
       this.setState({ pending: false });
       this.props.history.push('/');
+      console.log('redirect to notes');
     }
   }
 
@@ -34,7 +35,7 @@ class LoginForm extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     // this.props.setAuthenticationDetails(this.state.email, this.state.passwd);
-    this.props.loginUser(this.state.email, this.state.passwd);
+    this.props.requestLogin(this.state.email, this.state.passwd);
     this.setState({ pending: true });
   }
 
@@ -101,7 +102,7 @@ function mapStateToProps({ user }) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ loginUser }, dispatch);
+  return bindActionCreators({ requestLogin }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

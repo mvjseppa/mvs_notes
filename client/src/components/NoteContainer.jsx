@@ -8,11 +8,13 @@ import NoteCreator from './NoteCreator';
 class NoteContainer extends React.Component {
   componentDidMount() {
     const { token, history, getNotes } = this.props;
-    if (token === '') {
+    console.log('note container mount.token: ', token);
+    if (!token || token === '') {
       history.push('/login');
+      console.log('redirect to login page');
     } else {
+      console.log('get notes called');
       getNotes(token);
-      console.log('get notes triggered');
     }
   }
 
