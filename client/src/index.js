@@ -9,6 +9,7 @@ import registerServiceWorker from './registerServiceWorker';
 import reducers from './reducers/index';
 import MvsNotesApp from './components/MvsNotesApp';
 
+
 ReactDOM.render(
   <Provider store={applyMiddleware(thunk, ReduxPromise)(createStore)(reducers)}>
     <MvsNotesApp />

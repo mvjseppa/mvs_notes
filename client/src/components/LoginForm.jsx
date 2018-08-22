@@ -18,13 +18,6 @@ class LoginForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.user.token !== '') {
-      this.props.history.push('/');
-      console.log('redirect to notes');
-    }
-  }
-
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }

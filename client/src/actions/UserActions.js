@@ -1,4 +1,5 @@
 import { AuthenticationDetails, CognitoUser, CognitoUserPool } from 'amazon-cognito-identity-js';
+import history from '../history';
 
 export const LOAD_SESSION = 'LOAD_SESSION';
 export const TOKEN_ACQUIRED = 'TOKEN_ACQUIRED';
@@ -18,8 +19,12 @@ function loginFailed(error) {
   return { type: LOGIN_FAILED, payload: error };
 }
 
+
 function tokenAcquired(token) {
-  return { type: TOKEN_ACQUIRED, payload: token };
+  return (dispatch) => {
+    dispatch({ type: TOKEN_ACQUIRED, payload: token });
+    history.push('/');
+  };
 }
 
 export function requestLogin(Username, Password) {

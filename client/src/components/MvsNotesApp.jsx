@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Router, Route, Switch } from 'react-router-dom';
 import NoteContainer from './NoteContainer';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
 import ConfirmUserForm from './ConfirmUserForm';
 import Navigation from './Navigation';
 import { loadSession } from '../actions/UserActions';
+import history from '../history';
 
 class MvsNotesApp extends React.Component {
   constructor(props) {
@@ -34,7 +35,7 @@ class MvsNotesApp extends React.Component {
 
   render() {
     return (
-      <BrowserRouter>
+      <Router history={history}>
         <div id="app">
           <header>
             <img src="logo.svg" height="96" widht="96" alt="Mvs-Notes logo" />
@@ -59,7 +60,7 @@ class MvsNotesApp extends React.Component {
           </main>
           <footer />
         </div>
-      </BrowserRouter>
+      </Router>
     );
   }
 }
