@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: mvs-notes-api # NOTE: update this with your service name
+service: mvs-notes # NOTE: update this with your service name
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -23,8 +23,8 @@ provider:
     region: eu-central-1
     profile: serverless-admin
     environment:
-        DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
-        FINCH_BUCKET: ${self:service}-${opt:stage, self:provider.stage}-finch
+        DYNAMODB_TABLE: ${self:service}-${self:custom.stage}
+        FINCH_BUCKET: ${self:service}-${self:custom.stage}-finch
 
     iamRoleStatements:
         -
@@ -92,42 +92,16 @@ functions:
 #                    pool: MyUserPool
 
 resources:
-    Resources:
-        mvsNotesDynamodbTable:
-            Type: 'AWS::DynamoDB::Table'
-            DeletionPolicy: Retain
-            Properties:
-                AttributeDefinitions:
-                    -
-                        AttributeName: id
-                        AttributeType: S
-                KeySchema:
-                    -
-                        AttributeName: id
-                        KeyType: HASH
-
-                ProvisionedThroughput:
-                    ReadCapacityUnits: 1
-                    WriteCapacityUnits: 1
-
-                TableName: ${self:provider.environment.DYNAMODB_TABLE}
-
-        GatewayResponseDefault4XX:
-            Type: 'AWS::ApiGateway::GatewayResponse'
-            Properties:
-                ResponseParameters:
-                    gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
-                    gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
-                ResponseType: DEFAULT_4XX
-                RestApiId:
-                    Ref: 'ApiGatewayRestApi'
+  - ${file(resources/dynamodb.yml)}
+  - ${file(resources/gateway.yml)}
 
 plugins:
-    - serverless-finch
+  - serverless-finch
 
 custom:
-    auth: "arn:aws:cognito-idp:eu-central-1:412384590453:userpool/eu-central-1_op50LtdMn"
-    client:
-        bucketName: ${self:provider.environment.FINCH_BUCKET} # (see Configuration Parameters below)
-        distributionFolder: "client/build"
-        # [other configuration parameters] (see Configuration Parameters below)
+  stage: ${opt:stage, self:provider.stage}
+  auth: "arn:aws:cognito-idp:eu-central-1:412384590453:userpool/eu-central-1_op50LtdMn"
+  client:
+    bucketName: ${self:provider.environment.FINCH_BUCKET} # (see Configuration Parameters below)
+    distributionFolder: "client/build"
+    # [other configuration parameters] (see Configuration Parameters below)

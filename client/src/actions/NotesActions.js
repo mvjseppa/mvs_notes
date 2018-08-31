@@ -4,7 +4,7 @@ export const GET_NOTES = 'GET_NOTES';
 export const DELETE_NOTE = 'DELETE_NOTE';
 export const CREATE_NOTE = 'CREATE_NOTE';
 
-const apiUrl = 'https://zvw0ce1n8f.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes/';
+const apiUrl = 'https://tnwssdh396.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes';
 
 export function getNotes(authToken) {
   const request = axios.get(apiUrl, { headers: { Authorization: authToken } });
