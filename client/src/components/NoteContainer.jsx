@@ -21,7 +21,7 @@ class NoteContainer extends React.Component {
   render() {
     const { notes } = this.props;
 
-    if (!notes || notes.length === 0) {
+    if (!notes) {
       console.log('loading notes...');
       return (
         <div id="user_data">
