@@ -11,7 +11,6 @@ class Navigation extends React.Component {
           type="button"
           onClick={() => {
             this.props.logoutUser();
-            this.props.history.push('/login');
           }}
         >
           Log out
@@ -19,15 +18,15 @@ class Navigation extends React.Component {
       );
     }
 
-    if (this.props.location.pathname === '/login') {
+    if (this.props.location.pathname === '/logout') {
       return (
         <button
           type="button"
           onClick={() => {
-            this.props.history.push('/signup');
+            this.props.history.push('/login');
           }}
         >
-          Sign up
+          Log in
         </button>
       );
     }

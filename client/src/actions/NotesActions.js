@@ -7,6 +7,7 @@ export const CREATE_NOTE = 'CREATE_NOTE';
 const apiUrl = 'https://tnwssdh396.execute-api.eu-central-1.amazonaws.com/dev/mvs-notes/';
 
 export function getNotes(authToken) {
+  console.log('get notes called: ', authToken);
   const request = axios.get(apiUrl, { headers: { Authorization: authToken } });
 
   return {

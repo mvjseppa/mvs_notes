@@ -2,26 +2,31 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { getNotes } from '../actions/NotesActions';
+import { loadSession } from '../actions/UserActions';
 import Note from './Note';
 import NoteCreator from './NoteCreator';
 
 class NoteContainer extends React.Component {
   componentDidMount() {
-    const { token, history, getNotes } = this.props;
-    console.log('note container mount.token: ', token);
+    const { token } = this.props;
     if (!token || token === '') {
-      history.push('/login');
-      console.log('redirect to login page');
+      this.props.loadSession();
     } else {
-      console.log('get notes called');
-      getNotes(token);
+      this.props.getNotes(token);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { token } = this.props;
+    if (token && token !== prevProps.token) {
+      this.props.getNotes(token);
     }
   }
 
   render() {
-    const { notes } = this.props;
+    const { notes, token } = this.props;
 
-    if (!notes) {
+    if (!notes || !token || token === '') {
       console.log('loading notes...');
       return (
         <div id="user_data">
@@ -50,7 +55,7 @@ function mapStateToProps({ notes, user }) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ getNotes }, dispatch);
+  return bindActionCreators({ getNotes, loadSession }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NoteContainer);
