@@ -3,10 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Router, Route, Switch } from 'react-router-dom';
 import NoteContainer from './NoteContainer';
-import LoginForm from './LoginForm';
-import SignUpForm from './SignUpForm';
-import ConfirmUserForm from './ConfirmUserForm';
 import Navigation from './Navigation';
+import TokenHandler from './TokenHandler';
 import { loadSession } from '../actions/UserActions';
 import history from '../history';
 
@@ -52,8 +50,15 @@ class MvsNotesApp extends React.Component {
             </div>
 
             <Switch>
-              <Route path="/login" component={LoginForm} />
-              <Route path="/signup" component={SignUpForm} />
+              <Route
+                path="/login"
+                component={() => {
+                  window.location = 'https://mvs-notes.auth.eu-central-1.amazoncognito.com/login?response_type=token&client_id=7qad5k2nahbgrb86911mkfd887&redirect_uri=http://localhost:3000/token';
+                  return <div>Redirecting...</div>;
+                }}
+              />
+              <Route path="/token" component={TokenHandler} />
+              <Route path="/logout" component={() => <div>Logged out.</div>} />
               <Route path="/" component={NoteContainer} />
             </Switch>
 

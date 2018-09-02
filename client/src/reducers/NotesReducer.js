@@ -5,6 +5,9 @@ export default function (state = [], action) {
 
   switch (action.type) {
     case GET_NOTES:
+      if (!action.payload.data) {
+        return [];
+      }
       return action.payload.data.sort((a, b) => a.timestamp < b.timestamp);
 
     case DELETE_NOTE:
