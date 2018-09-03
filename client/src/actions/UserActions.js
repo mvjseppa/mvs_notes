@@ -1,10 +1,8 @@
-import history from '../history';
-
 export const LOAD_SESSION = 'LOAD_SESSION';
 export const TOKEN_ACQUIRED = 'TOKEN_ACQUIRED';
 export const LOGOUT_USER = 'LOGOUT_USER';
 
-export function tokenAcquired(token) {
+export function tokenAcquired(token, history) {
   return (dispatch) => {
     localStorage.setItem('token', token);
     history.push('/');
@@ -12,12 +10,12 @@ export function tokenAcquired(token) {
   };
 }
 
-export function loadSession() {
+export function loadSession(history) {
   console.log('loading session from storage...');
   const token = localStorage.getItem('token');
   if (token && token !== '') {
     return (dispatch) => {
-      dispatch(tokenAcquired(token));
+      dispatch(tokenAcquired(token, history));
     };
   }
 
@@ -26,8 +24,7 @@ export function loadSession() {
   return { type: LOAD_SESSION };
 }
 
-export function logoutUser() {
+export function logoutUser(history) {
   localStorage.clear();
-  history.push('/logout');
   return { type: LOGOUT_USER };
 }

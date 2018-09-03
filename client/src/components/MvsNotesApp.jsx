@@ -1,13 +1,13 @@
 import React from 'react';
-import { Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import NoteContainer from './NoteContainer';
 import Navigation from './Navigation';
 import TokenHandler from './TokenHandler';
-import history from '../history';
+import Logout from './Logout';
 
 function MvsNotesApp(props) {
   return (
-    <Router history={history}>
+    <BrowserRouter>
       <div id="app">
         <header>
           <img src="logo.svg" height="96" widht="96" alt="Mvs-Notes logo" />
@@ -32,14 +32,14 @@ function MvsNotesApp(props) {
               }}
             />
             <Route path="/token" component={TokenHandler} />
-            <Route path="/logout" component={() => <div>Logged out.</div>} />
+            <Route path="/logout" component={Logout} />
             <Route path="/" component={NoteContainer} />
           </Switch>
 
         </main>
         <footer />
       </div>
-    </Router>
+    </BrowserRouter>
   );
 }
 

@@ -8,9 +8,9 @@ import NoteCreator from './NoteCreator';
 
 class NoteContainer extends React.Component {
   componentDidMount() {
-    const { token } = this.props;
+    const { token, history } = this.props;
     if (!token || token === '') {
-      this.props.loadSession();
+      this.props.loadSession(history);
     } else {
       this.props.getNotes(token);
     }

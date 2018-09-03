@@ -10,7 +10,11 @@ class TokenHandler extends React.Component {
 
     const tokens = queryString.parse(this.props.location.hash);
     console.log(tokens);
-    this.props.tokenAcquired(tokens.id_token);
+    if (!tokens.id_token) {
+      this.props.history.push('/');
+    } else {
+      this.props.tokenAcquired(tokens.id_token, this.props.history);
+    }
   }
 
   render() {

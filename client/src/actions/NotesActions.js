@@ -21,7 +21,7 @@ export function deleteNote(id, authToken) {
 
   return {
     type: DELETE_NOTE,
-    payload: { id, request },
+    payload: request,
   };
 }
 

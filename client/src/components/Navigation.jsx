@@ -1,41 +1,26 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { logoutUser } from '../actions/UserActions';
 
 class Navigation extends React.Component {
   render() {
-    if (this.props.location.pathname === '/') {
-      return (
-        <button
-          type="button"
-          onClick={() => {
-            this.props.logoutUser();
-          }}
-        >
-          Log out
-        </button>
-      );
+    const { token } = this.props;
+    if (token && token !== '') {
+      return <Link to={'/logout'}>Logout</Link>;
     }
 
-    if (this.props.location.pathname === '/logout') {
-      return (
-        <button
-          type="button"
-          onClick={() => {
-            this.props.history.push('/login');
-          }}
-        >
-          Log in
-        </button>
-      );
-    }
-    return null;
+    return <Link to={'/login'}>Log in</Link>;
   }
+}
+
+function mapStateToProps({ user }) {
+  return { token: user.token };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ logoutUser }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(Navigation);
+export default connect(mapStateToProps, mapDispatchToProps)(Navigation);
