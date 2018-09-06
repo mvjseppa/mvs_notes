@@ -1,1 +1,1 @@
-mvs_notes
+Learning project to study Serverless, AWS-Lambda, React and Redux
